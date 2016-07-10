@@ -1,0 +1,25 @@
+# TealsMC Root Ignore File
+#
+# See also Forge/eclipse/.gitignore.
+# ------------------------------------------------------------------------------
+
+# GitHub Pages Site Directory
+/site/
+
+# Install & Test Directory
+/test/
+
+# Build Output Directory
+/out/
+
+# Standard Window Debris
+Thumbs.db
+Desktop.ini
+*.bak
+*.tmp
+~$*.docx
+~$*.pptx
+~$*.xlsx
+
+# Standard Mac Debris
+.DS_Store

@@ -1,0 +1,24 @@
+# IntelliJ configuration and build folders
+
+.idea/
+out/
+.metadata/
+/production/options.txt
+
+# Generated
+
+config/
+logs/
+mods/
+resourcepacks/
+saves/
+usernamecache.json
+RemoteSystemsTempFiles/
+options.txt
+crash-reports/
+
+*.log
+
+# Eclipse bin folder
+
+bin/

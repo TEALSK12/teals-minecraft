@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tealsmodloader",
+  "name": "TEALS Mod Loader",
+  "description": "Used to load sub modules that make modding much easier!",
+  "version": "1.0.0",
+  "mcversion": "${mcversion}",
+  "url": "http://tealsk12.org/",
+  "updateUrl": "",
+  "authorList": ["Connor Hollasch", "Steve Hollasch"],
+  "credits": "TEALS k12",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
