@@ -72,6 +72,10 @@ exit /b 0
 
 
 :build
+    call :check7z
+    echo errorlevel = %errorlevel%
+    if %errorlevel% neq 0 goto :eof
+
     call :clean
 
     set robocopy=robocopy /nfl /njh /njs
@@ -133,6 +137,13 @@ exit /b 0
         git checkout gh-pages
     popd
 
+    goto :eof
+
+
+:check7z
+    @REM -- Ensure that the 7-zip command-line executable is available on the current path.
+    where /q 7z
+    if %errorlevel% neq 0 echo 1>&2ERROR: Executable 7z.exe not found.
     goto :eof
 
 
