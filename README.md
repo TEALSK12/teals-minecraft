@@ -2,7 +2,7 @@ Teals Minecraft Project
 ========================
 
   This is the TEALS repo for the development of the Minecraft projects and associated curriculum.
-  The main project web site is at http://tealsk12.github.io/tealsMC.
+  The main project web site is at https://tealsk12.github.io/teals-minecraft.
 
 Prerequisites
 -------------
@@ -78,27 +78,43 @@ Building
 Releasing
 ---------
   1. Ensure that `version.txt` contains the current release number. This project uses
-     [semantic versioning](http://semver.org/). Semantic versioning uses three values:
-     MAJOR.MINOR.PATCH.
-     - Increment the PATCH number if you're making a bug fix that is backwards compatible with the
-       prior release.
-     - Increment the MINOR number if you're adding functionality that is backwards compatible with
-       the prior release.
-     - Increment the MAJOR number if a release is somehow backwards incompatible with the prior
-       release.
+   [semantic versioning](http://semver.org/). Semantic versioning uses three values:
+   MAJOR.MINOR.PATCH.
+   - Increment the PATCH number if you're making a bug fix that is backwards compatible with the
+     prior release.
+   - Increment the MINOR number if you're adding functionality that is backwards compatible with
+     the prior release.
+   - Increment the MAJOR number if a release is somehow backwards incompatible with the prior
+     release.
   2. Verify that `CHANGELOG.md` contains a good description of the changes for this release.
-  3. Review `build/README-Distrib.txt` for content and make any necessary changes.
-  4. Build the new releases using `make all` from the root of the project. This will create the
-     release Zip files in the `out/` directory.
-  5. Upload these files to hollasch.net/main/teals. (Not the perfect hosting solution, but the best
-     we have for now.)
-  6. Go to the `site/` directory (Run `make site` if you don't have one), and update the
-     `downloads.html` file to reflect the new latest release.
-  7. Create a new tag for the release. Use the command `git tag -a vX.Y.Z`, where vX.Y.Z is the
-     just-released version number. In the comments, try to add all of the changelog items from
-     `CHANGELOG.md`. When done, push your new tag with `git push origin vX.Y.Z`.
-  8. Bump the version in the `version.txt` file in the project root.
-  9. Start a new release section in `CHANGELOG.md`.
+  3. Update the release date in `CHANGELOG.md`.
+  4. Review `build/README-Distrib.txt` for content and make any necessary changes.
+  5. Build the new releases using `make all` from the root of the project. This will create the
+    release Zip files in the `out/` directory.
+  6. Create a release tag at the current release point:
+
+    ```cmd
+    > git tag -a vX.Y.Z
+    ```
+
+    This will create the tag `v1.2.3` at the current HEAD commit. In the editor, add all of the
+    relevant changelog items from `CHANGELOG.md`. When done, push the new release tag up to GitHub:
+
+    ```cmd
+    > git push origin vX.Y.Z
+    ```
+
+  7. Now go to the
+    [`teals-minecraft` release page](https://github.com/TEALSK12/teals-minecraft/releases) and hit
+    the "Draft a new release" button. Enter the new release tag, ensure that the target branch is
+    `master`, enter the title (just use the version number). Finally add the changelog items in the
+    description. After this, drag the release archives (`tealsmc-X.Y.Z-eclipse.zip` and
+    `tealsmc-X.Y.Z-intellij.zip`) to the upload area. Finally, hit the "Publish release" button.
+  8. In your local clone, go to the `site/` directory (Run `make site` if you don't have one), and
+    update the `downloads.html` file to reflect the new latest release. Move the prior latest
+    release into the prior releases section, and add the new release and description.
+  9. Bump the version in the `version.txt` file in the project root.
+  10. Start a new release section in `CHANGELOG.md`.
 
 
 ----
