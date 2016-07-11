@@ -97,7 +97,7 @@ Releasing
     > git tag -a vX.Y.Z
     ```
 
-    This will create the tag `v1.2.3` at the current HEAD commit. In the editor, add all of the
+    This will create the tag `vX.Y.Z` at the current HEAD commit. In the editor, add all of the
     relevant changelog items from `CHANGELOG.md`. When done, push the new release tag up to GitHub:
 
     ```cmd
