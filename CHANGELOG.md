@@ -3,6 +3,8 @@ TEALS Minecraft Project Change Log
 
 
 ## v1.1.1  (*In Progress*)
+  - Note: Migrated GitHub repo from private `tealsMC` to public `teals-minecraft`. See
+    [Issue #40](https://github.com/TEALSK12/tealsMC/issues/40) for more information.
 
 
 ## v1.1.0  (2016-05-31)
@@ -21,5 +23,5 @@ TEALS Minecraft Project Change Log
 
 
 ## v1.0.0  (2016-05-08)
-  - Official kickoff v1.0.0 release
-  - First simplified release. No install, admin, or internet connection required
+  - Note: Official kickoff v1.0.0 release
+  - Feature: First simplified release. No install, admin, or internet connection required
