@@ -1,6 +1,9 @@
 TEALS Minecraft Project Change Log
 ==================================
 
+**NOTE** -- These changes refer to the _generated_ TEALS Minecraft project, not necessarily to the
+project source itself. Changes that do not affect the released project are not reflected here.
+
 
 ## v1.1.1  (*In Progress*)
   - Note: Migrated GitHub repo from private `tealsMC` to public `teals-minecraft`. See

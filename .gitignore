@@ -3,9 +3,6 @@
 # See also Forge/eclipse/.gitignore.
 # ------------------------------------------------------------------------------
 
-# GitHub Pages Site Directory
-/site/
-
 # Install & Test Directory
 /test/
 

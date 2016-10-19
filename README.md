@@ -1,8 +1,9 @@
 Teals Minecraft Project
-========================
+====================================================================================================
 
-  This is the TEALS repo for the development of the Minecraft projects and associated curriculum.
-  The main project web site is at https://tealsk12.github.io/teals-minecraft.
+This is the TEALS repo for the development of the Minecraft projects and associated curriculum.
+The main project web site is at https://tealsk12.github.io/teals-minecraft.
+
 
 Prerequisites
 -------------
@@ -16,22 +17,11 @@ Prerequisites
 
 Clone Setup
 -----------
-  In addition to the files and directories of a standard clone of this repo, there are two other
-  directories you may wish to set up:
-
-### /test/
-  This directory is ignored in the repo, and is intended for local test setups of the TealsMC
-  distributed zip file. You can use this directory to hold a built release from the `out` directory.
-  For example, running 'make build' might create `out\tealsmc-idea-1.0.1.zip`, which you could then
-  extract to `test` and try out from there.
-
-### /site/
-  The /site/ directory contains the source for the public project web site. To set it up, run the
-  command 'make site' from the project root.
-
-  (This directory is actually a clone of this same repo, but for the 'gh-pages' branch. This is
-  GitHub's way of associating project web site source with the project contents itself. Project web
-  site source is in the 'gh-pages' branch, and project content is in the 'master' branch.)
+  In addition to the files and directories of a standard clone of this repo, you may also want to
+  set up a `test/` directory. This directory is ignored in the repo, and is intended for local test
+  setups of the TealsMC distributed zip file. You can use this directory to hold a built release
+  from the `build` directory. For example, running 'make build' might create
+  `out\tealsmc-idea-1.0.1.zip`, which you could then extract to `test` and try out from there.
 
 
 Development - Eclipse
@@ -107,14 +97,11 @@ Releasing
   7. Now go to the
     [`teals-minecraft` release page](https://github.com/TEALSK12/teals-minecraft/releases) and hit
     the "Draft a new release" button. Enter the new release tag, ensure that the target branch is
-    `master`, enter the title (just use the version number). Finally add the changelog items in the
+    `master`, enter the title (for example, "v1.1.0"). Finally add the changelog items in the
     description. After this, drag the release archives (`tealsmc-X.Y.Z-eclipse.zip` and
     `tealsmc-X.Y.Z-intellij.zip`) to the upload area. Finally, hit the "Publish release" button.
-  8. In your local clone, go to the `site/` directory (Run `make site` if you don't have one), and
-    update the `downloads.html` file to reflect the new latest release. Move the prior latest
-    release into the prior releases section, and add the new release and description.
-  9. Bump the version in the `version.txt` file in the project root.
-  10. Start a new release section in `CHANGELOG.md`.
+  8. Bump the version in the `version.txt` file in the project root.
+  9. Start a new release section in `CHANGELOG.md`.
 
 
 ----

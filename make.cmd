@@ -13,8 +13,6 @@
 @REM       build - Build the distributable project archive file in
 @REM               out/TealsMC.zip.
 @REM
-@REM       site  - Set up GitHub pages clone for web site development in site/ dir
-@REM
 @REM       fresh = clean + build
 @REM       all   = clean + build
 @REM
@@ -39,8 +37,6 @@ if "%1" equ "" (
     ) else if /i "%target%" equ "fresh" (
         call :clean
         call :build
-    ) else if /i "%target%" equ "site" (
-        call :site
     ) else if /i "%target%" equ "help" (
         call :help
     ) else if /i "%target%" equ "/?" (
@@ -61,7 +57,6 @@ exit /b 0
 
 :clean
     rmdir 2>nul: /s /q out
-
     mkdir out
     goto :eof
 
@@ -125,21 +120,6 @@ exit /b 0
     goto :eof
 
 
-:site
-    @REM -- Create a clone of the web site source
-    if exist site (
-        @echo ERROR: 'site' directory already exists.
-        goto :eof
-    )
-    for /f "delims=" %%u in ('git remote get-url origin') do set repoOriginURL=%%u
-    git clone %repoOriginURL% site
-    pushd site
-        git checkout gh-pages
-    popd
-
-    goto :eof
-
-
 :check7z
     @REM -- Ensure that the 7-zip command-line executable is available on the current path.
     where /q 7z
@@ -156,8 +136,6 @@ exit /b 0
     @echo.
     @echo.    build - Build the distributable project archive file in
     @echo.            out/TealsMC.zip.
-    @echo.
-    @echo.    site  - Set up GitHub pages clone for web site development in site/ dir
     @echo.
     @echo.    fresh = clean + build
     @echo.    all   = clean + build
