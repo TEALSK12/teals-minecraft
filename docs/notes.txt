@@ -100,7 +100,7 @@ Setup on Windows
     !! Not in Admin Shell:
     3a.  gem sources --remove https://rubygems.org/ --add http://rubygems.org/
          (Answer "y" after security warning.)
-    3b.  `gem install minima bundler jekyll jekyll-feed`
+    3b.  `gem install minima bundler jekyll jekyll-feed github-pages`
 
 Build & Run
 
