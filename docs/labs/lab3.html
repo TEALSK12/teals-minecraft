@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
 <!-- vim: set textwidth=100 shiftwidth=2 : -->
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>TEALS Minecraft &ndash; Lab 3: Basic Blocks</title>
-  <link rel="stylesheet" type="text/css" href="../style/site.css">
-</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TEALS Minecraft &ndash; Lab 3: Basic Blocks</title>
+<link rel="stylesheet" type="text/css" href="../style/site.css">
 
-<body>
+
 
 <h1 class="lab">Lab 3: Basic Blocks</h1>
 
@@ -17,7 +14,7 @@
   <h2>Objective</h2> <div class="indented">
     <p>If you want to modify the Minecraft world, you'll need to be able to work with blocks
     &ndash; the fundamental building unit of the MC universe. For this lab, you'll be
-    building our first custom block.</p>
+    building our first custom block.
   </div>
 
   <h2 id="notes">Notes</h2>
@@ -37,18 +34,18 @@
     <h3>Part 1 &mdash; Create a simple block that has no function</h3>
     <div class="indented">
 
-        <ol>
+      <ol>
         <li>Find the <code>AmethystOre</code> class in
-          <code>tealsmc/mods/blocks/AmethystOre.java</code>. You will modify this class.</li>
+          <code>tealsmc/mods/blocks/AmethystOre.java</code>. You will modify this class.
 
         <li>To start with, it has a public constructor that takes no parameters. Inside the
-          constructor, add a call the superclass's constructor with <code>Material.rock</code>.</li>
+          constructor, add a call the superclass's constructor with <code>Material.rock</code>.
 
         <li>Go to the <code>BlocksModule</code> class. Notice that <code>AmethystOre</code> has been
-          registered to the <code>parentMod</code> class, just as you did with items. </li>
+          registered to the <code>parentMod</code> class, just as you did with items.
 
         <li>Now go back to the <code>Amethystore</code> class. In the constructor, set the creative
-          tab (<code>setCreativeTab</code>) to <code>CreativeTabs.tabBlock</code>.</li>
+          tab (<code>setCreativeTab</code>) to <code>CreativeTabs.tabBlock</code>.
 
         <li>Go in-game, open your inventory (press '<kbd>e</kbd>'), and scroll to the bottom of the
           blocks tab. You should see the Amethyst block near the bottom of the blocks creative tab
@@ -59,22 +56,21 @@
           leftmost slot is number 1, the rightmost slot is number 9). Aim at a spot on the ground
           where you want to place the block, and right click. You can then put a block on top of the
           block you just placed, or just about anywhere else. Left-click on a block to destroy it.
-          </li>
 
-        </ol>
-        </div>
+      </ol>
+    </div>
 
     <h3>Part 2 &mdash; Create a block that gravity applies to (falling block)</h3>
     <div class="indented">
 
       <ol>
         <li>Modify the block you just created to now extend the <code>BlockFalling</code> class
-          (early versions already have this modification in place).</li>
+          (early versions already have this modification in place).
 
         <li>In game, place your block next to another block, with nothing beneath it. If the block
           falls down until it rests on something, it works. Another way to test this is to make a
           stack of two Amethyst blocks, and then destroy (right-click) the bottom block. The top
-          block should fall. If it didn't, make sure you registered the correct block.</li>
+          block should fall. If it didn't, make sure you registered the correct block.
 
       </ol>
     </div>
@@ -83,53 +79,53 @@
 
       <ol>
         <li>Create a new block class called <code>BatteryBlock</code> and extend the
-          <code>Block</code> class.</li>
+          <code>Block</code> class.
 
         <li>Implement a <code>public</code> constructor that takes no parameters. In the
           constructor, call the superclass's constructor with <code>Material.rock</code>. Set the
-          creative tab to the block tab as above.</li>
+          creative tab to the block tab as above.
 
         <li>In order to make multiple textures, you will need to create a private array of
           <code>IIcon</code>'s (size 3) as a field. You will use this array to hold the three
-          textures (images) of the top, bottom and sides of the battery.</li>
+          textures (images) of the top, bottom and sides of the battery.
 
         <li>Implement the two methods <code>public void registerBlockIcons(IIconRegister
-          iconRegister)</code> and <code>public IIcon getIcon(int side, int meta)</code>.</li>
+          iconRegister)</code> and <code>public IIcon getIcon(int side, int meta)</code>.
 
         <li><div>
           <p>Inside <code>registerBlockIcons</code>, the <code>IIconRegister</code> parameter has a
           method <code>registerIcon(String texture_name)</code> that returns an <code>IIcon</code>
           reference. Use this method by passing each texture name as a parameter to return the
           associated <code>IIcon</code> object. Store these icon references in your icons array. The
-          texture names are the following:</p>
+          texture names are the following:
 
           <ul class="noBullet compact">
-            <li><code>Common.MOD_ID + ":battery_top"</code></li>
-            <li><code>Common.MOD_ID + ":battery_bottom"</code></li>
-            <li><code>Common.MOD_ID + ":battery_side"</code></li>
+            <li><code>Common.MOD_ID + ":battery_top"</code>
+            <li><code>Common.MOD_ID + ":battery_bottom"</code>
+            <li><code>Common.MOD_ID + ":battery_side"</code>
           </ul>
-          </div></li>
+          </div>
 
         <li><div>
           <p>The Minecraft client will continually query the block for its texture icons, using the
           <code>getIcon</code> method. Inside the <code>getIcon</code> method, the side parameter
-          indicates which side of the cube it's querying:</p>
+          indicates which side of the cube it's querying:
 
           <ul class="noBullet compact">
-            <li>0: block bottom</li>
-            <li>1: block top</li>
-            <li>2, 3, 4, 5: block sides</li>
+            <li>0: block bottom
+            <li>1: block top
+            <li>2, 3, 4, 5: block sides
           </ul>
 
           <p>Implement the logic that uses the "side" parameter to look up the correct object in the
-          <code>IIcon</code> array and return it to the calling method.</p>
-          </div></li>
+          <code>IIcon</code> array and return it to the calling method.
+          </div>
 
         <li>As with the basic block, register your <code>BatteryBlock</code>. Use anything for the
-          texture name, since you overrode the <code>registerBlockIcons</code> method).</li>
+          texture name, since you overrode the <code>registerBlockIcons</code> method).
 
         <li>Head into the game and verify that your new battery block (top, bottom and sides) looks
-          as expected.</li>
+          as expected.
 
       </ol>
     </div>
@@ -139,7 +135,7 @@
       <ol>
         <li>In the 'assets' directory of your installation, you'll find two images: white.png and
           black.png. Add those two files to your project in
-          <code>src/main/resources/assets.tealsmodloader.textures/blocks</code>.</li>
+          <code>src/main/resources/assets.tealsmodloader.textures/blocks</code>.
 
         <li>A checkered block is like a battery block in that you'll need to assign textures to the
           block faces. However, a checkered block comes in two versions: all white and all black.
@@ -147,45 +143,41 @@
           black, white, black, white and so on. Start by creating a new block class,
           <code>CheckeredBlock</code>. The public checkered block constructor should take no
           parameters, will pass <code>Material.rock</code> to its superclass constructor, and will
-          use the <code>CreativeTabs.tabBlock</code>. </li>
+          use the <code>CreativeTabs.tabBlock</code>.
 
         <li>Just like the <code>BatteryBlock</code>, the <code>CheckeredBlock</code> class will need
           an array of <code>IIcon</code> to hold the face textures. In this case, you'll need to
-          hold two different <code>IIcon</code> entries. </li>
+          hold two different <code>IIcon</code> entries.
 
         <li>As with <code>BatteryBlock</code>, implement the <code>registerBlockIcons</code> method
           (see above), and set <code>icons[0]</code> to <code>Common.MOD_ID + ":black"</code> and
           <code>icons[1]</code> to <code>Common.MOD_ID + ":white"</code>. Again, refer to
-          BatteryBlock for help. </li>
+          BatteryBlock for help.
 
         <li><p>Now, you will need to implement <em>two</em> versions of the <code>getIcon</code>
-          method. They have the following signatures:</p>
+          method. They have the following signatures:
 
-            <p class="indented"><code>public IIcon getIcon (int side, int meta);</code></p>
+            <p class="indented"><code>public IIcon getIcon (int side, int meta);</code>
 
-            <p>and</p>
+            <p>and
 
-            <p class="indented"><code>public IIcon getIcon (<br>
-            &nbsp;&nbsp;&nbsp;
-            IBlockAccess worldAccess, int x, int y, int z, int meta);</code></p>
-            </p>
-            </li>
+            <p class="indented"><code>public IIcon getIcon (<br> &nbsp;&nbsp;&nbsp; IBlockAccess
+              worldAccess, int x, int y, int z, int meta);</code>
 
         <li>The game will use the first version of <code>getIcon</code> to retrieve the block
           textures when displaying it in your inventory. For this usage, just return the white icon
-          for all sides. </li>
+          for all sides.
 
         <li><p>Now the fun part. The second version of <code>getIcon</code> takes in x, y and z
           parameters that correspond to the Minecraft coordinate system. The ground extends in the X
           and Z directions, and Y is used to represent up. You can also think of these three
           coordinates as the address of any given block. If you're unfamiliar with 3D coordinates,
           don't worry &mdash; it's just like the old familiar X and Y Cartesian coordinates, with a
-          new coordinate that goes into and out of the screen, to cover 3D space.</p>
+          new coordinate that goes into and out of the screen, to cover 3D space.
 
           <p>The puzzle you'll need to solve is how to figure out, from the three coordinate
           parameters alone, whether to return the black texture, or the white texture, so that the
-          CheckeredBlock forms a checkerboard pattern when placed in the world.</p>
-          </li>
+          CheckeredBlock forms a checkerboard pattern when placed in the world.
       </ol>
 
     </div>
@@ -194,11 +186,9 @@
 
 </div>
 
+
 <div id="footer">
   <div class="prev"><a href="lab2.html">&#x25c0; Lab 2</a></div>
   <div class="home"><a href="../units.html">Home</a></div>
   <div class="next"><a href="lab4.html">Lab 4 &#x25b6;</a></div>
 </div>
-
-</body>
-</html>

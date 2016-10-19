@@ -1,122 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
 <!-- vim: set textwidth=100 shiftwidth=2 : -->
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>TEALS Minecraft &ndash; Lab 2: Basic Items</title>
-  <link rel="stylesheet" type="text/css" href="../style/site.css">
-</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TEALS Minecraft &ndash; Lab 2: Basic Items</title>
+<link rel="stylesheet" type="text/css" href="../style/site.css">
 
-<body>
 
-  <h1 class="lab">Lab 2: Basic Items</h1>
-  <div id="content">
 
-    <h2>Objective</h2>
+<h1 class="lab">Lab 2: Basic Items</h1>
+<div id="content">
+
+  <h2>Objective</h2>
+  <div class="indented">
+    <p>For this lab, you will be implementing various Minecraft item objects. Recall that items
+    can be wielded, but are not blocks in the Minecraft world. You can throw ('<code>q</code>')
+    your items in the world, but you will mostly focus on what you can do with items in your
+    inventory.
+  </div>
+
+  <h2 id="notes">Notes</h2>
+  <div class="indented">
+      
+    <h4>To see if the current item stack is a sand item:</h4>
     <div class="indented">
-      <p>For this lab, you will be implementing various Minecraft item objects. Recall that items
-      can be wielded, but are not blocks in the Minecraft world. You can throw ('<code>q</code>')
-      your items in the world, but you will mostly focus on what you can do with items in your
-      inventory.</p>
-    </div>
-
-    <h2 id="notes">Notes</h2>
-    <div class="indented">
-        
-      <h4>To see if the current item stack is a sand item:</h4>
-      <div class="indented">
 <pre>String itemName = itemStack.getItem().getUnlocalizedName();
 if (itemName.equals(Blocks.sand.getUnlocalizedName())) {
-    ...
+  ...
 }</pre>
-      </div>
-
-      <h4>Getting the players inventory:</h4>
-      <div class="indented">
-        <pre>ItemStack[] inventory = player.inventory.mainInventory;</pre>
-      </div>
-
-      <h4>Adding a new item to the item registry:</h4>
-      <div class="indented">
-        <pre>parentMod.itemRegistry.newInstance(<i>textureName</i>, new <i>ItemClass</i>(), <i>inGameName</i>);</pre>
-      </div>
     </div>
 
-    <h2>Tasks</h2>
+    <h4>Getting the players inventory:</h4>
+    <div class="indented">
+      <pre>ItemStack[] inventory = player.inventory.mainInventory;</pre>
+    </div>
+
+    <h4>Adding a new item to the item registry:</h4>
+    <div class="indented">
+      <pre>parentMod.itemRegistry.newInstance(<i>textureName</i>, new <i>ItemClass</i>(), <i>inGameName</i>);</pre>
+    </div>
+  </div>
+
+  <h2>Tasks</h2>
+  <div class="indented">
+
+    <h3>Part 1 &mdash; Creating a Mod Module</h3>
     <div class="indented">
 
-      <h3>Part 1 &mdash; Creating a Mod Module</h3>
-      <div class="indented">
+      <ol>
+        <li>Inside the <code>tealsmc.mods.items</code> package, open the <code>RockSifter</code> class. Create a default constructor for the 
+          <code>RockSifter</code> class if one was notcreated for you. Inside the default constructor, set the max stack size to 1 
+          (using the <code>setMaxStackSize()</code> function), and set the creative tab to
+          <code>CreativeTabs.tabTools</code> (using the <code>setCreativeTab()</code>
+          function).
 
-        <ol>
-          <li>Inside the <code>tealsmc.mods.items</code> package, open the <code>RockSifter</code> class. Create a default constructor for the 
-		    <code>RockSifter</code> class if one was notcreated for you. Inside the default constructor, set the max stack size to 1 
-			(using the <code>setMaxStackSize()</code> function), and set the creative tab to
-            <code>CreativeTabs.tabTools</code> (using the <code>setCreativeTab()</code>
-            function).</li>
+        <li>Inside your Module class (<code>ItemsModule</code>) <code>onLoad()</code> method,
+          register your item to the mod loader. You may do so by calling
+          <code>parentMod.itemRegistry.newInstance()</code>, which takes parameters <code>String
+          texture_name, Item item</code>, and <code>String in_game_name</code>. For the texture
+          name, use <code>"rock_sifter"</code> and for the display name call it <code>"Rock
+          Sifter"</code>. (See the <a href="#notes">notes</a> section above for an
+          example.)
 
-          <li>Inside your Module class (<code>ItemsModule</code>) <code>onLoad()</code> method,
-            register your item to the mod loader. You may do so by calling
-            <code>parentMod.itemRegistry.newInstance()</code>, which takes parameters <code>String
-            texture_name, Item item</code>, and <code>String in_game_name</code>. For the texture
-            name, use <code>"rock_sifter"</code> and for the display name call it <code>"Rock
-            Sifter"</code>. (See the <a href="#notes">notes</a> section above for an
-            example.)</li>
+        <li>Go in game, open your creative inventory, browse to the tools tab, and verify that a
+          green-looking item shows up near the bottom of the inventory.
+      </ol>
+    </div>
 
-          <li>Go in game, open your creative inventory, browse to the tools tab, and verify that a
-            green-looking item shows up near the bottom of the inventory.</li>
-        </ol>
-      </div>
+    <h3>Part 2 &mdash; Creating a Rock Sifter</h3>
+    <div class="indented">
 
-      <h3>Part 2 &mdash; Creating a Rock Sifter</h3>
-      <div class="indented">
+      <ol>
 
-        <ol>
-
-          <li>Go back to the RockSifter class. Override the <code>onItemRightClick()</code> method
-            like so:
+        <li>Go back to the RockSifter class. Override the <code>onItemRightClick()</code> method
+          like so:
 <pre>public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-    ...
+  ...
 }</pre>
-            </li>
 
-          <li>See the <a href="#notes">notes</a> section above for help with the following
-            items.</li>
+        <li>See the <a href="#notes">notes</a> section above for help with the following
+          items.
 
-          <li>Iterate through each item in the player's inventory, and check to see if the item is
-            sand. Note: some items in the inventory may be null! If the item is sand, remove it by
-            setting that inventory entry to null. Finally, at the bottom of the
-            <code>onItemRightClick()</code> method, return the stack that was passed in. Verify that
-            the rock sifter works as expected (obliterates all sand blocks in your inventory).</li>
+        <li>Iterate through each item in the player's inventory, and check to see if the item is
+          sand. Note: some items in the inventory may be null! If the item is sand, remove it by
+          setting that inventory entry to null. Finally, at the bottom of the
+          <code>onItemRightClick()</code> method, return the stack that was passed in. Verify that
+          the rock sifter works as expected (obliterates all sand blocks in your inventory).
 
-          <li>Now change the <code>onItemRightClick()</code> method to convert all sand items to
-            gold nuggets (<code>Items.gold_nugget</code>). Again, verify that the new code works as
-            expected.</li>
+        <li>Now change the <code>onItemRightClick()</code> method to convert all sand items to
+          gold nuggets (<code>Items.gold_nugget</code>). Again, verify that the new code works as
+          expected.
 
-          <li>Finally, change the behavior of the rock sifter so that for each sand item in an item
-            stack, there is a 10% chance that it will contain a gold nugget. You will need to "roll
-            the dice" (hint: Math.random()) the same number of times as the size of each sand item's
-            stack. For each roll, if the number is less than 10% (0.10), then you've found gold!
-            &mdash; increase the count of gold nuggets for that stack. Replace the current inventory
-            entry with a stack of gold nuggets, as many as were found in the prior loop. If no gold
-            nuggets were found, then you'll have to empty (null) the inventory slot. Verify that
-            your code works as expected: each sand block is converted to a gold nugget 10% of the
-            time.</li>
+        <li>Finally, change the behavior of the rock sifter so that for each sand item in an item
+          stack, there is a 10% chance that it will contain a gold nugget. You will need to "roll
+          the dice" (hint: Math.random()) the same number of times as the size of each sand item's
+          stack. For each roll, if the number is less than 10% (0.10), then you've found gold!
+          &mdash; increase the count of gold nuggets for that stack. Replace the current inventory
+          entry with a stack of gold nuggets, as many as were found in the prior loop. If no gold
+          nuggets were found, then you'll have to empty (null) the inventory slot. Verify that
+          your code works as expected: each sand block is converted to a gold nugget 10% of the
+          time.
 
-        </ol>
-
-      </div>
+      </ol>
 
     </div>
 
   </div>
 
-  <div id="footer">
-    <div class="prev"><a href="lab1.html">&#x25c0; Lab 1</a></div>
-    <div class="home"><a href="../units.html">Home</a></div>
-    <div class="next"><a href="lab3.html">Lab 3 &#x25b6;</a></div>
-  </div>
+</div>
 
-</body>
-</html>
+
+<div id="footer">
+  <div class="prev"><a href="lab1.html">&#x25c0; Lab 1</a></div>
+  <div class="home"><a href="../units.html">Home</a></div>
+  <div class="next"><a href="lab3.html">Lab 3 &#x25b6;</a></div>
+</div>
