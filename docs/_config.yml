@@ -29,6 +29,18 @@ markdown: kramdown
 theme: minima
 gems:
   - jekyll-feed
+  - jekyll-coffeescript
+  - jekyll-paginate
 exclude:
   - Gemfile
   - Gemfile.lock
+kramdown:
+  input: GFM
+  hard_wrap: false
+  math_engine: mathjax
+lsi: false
+safe: true
+incremental: false
+highlighter: rouge
+gist:
+  noscript: false
