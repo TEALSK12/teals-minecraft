@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- vim: set textwidth=100 shiftwidth=2 : -->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>TEALS Minecraft &ndash; Lab 8: Chameleon Robot</title>
+  <link rel="stylesheet" type="text/css" href="../style/site.css">
+</head>
+
+<body>
+
+  <h1 class="lab">Lab 8: Chameleon Robot</h1>
+  <div id="content">
+
+    <h2>Objective</h2>
+    <div class="indented">
+      <p>In lab 8, you will create an entity that disguises itself as a neighboring block when it
+      is damaged (by anything). After a specific amount of hiding time, it will convert back to a
+      normal entity and walk away as if nothing happened.</p>
+    </div>
+
+    <h2 id="notes">Notes</h2>
+    <div class="indented">
+
+      <h4>To add a new task with a specific priority</h4>
+      <div class="indented">
+        <code>tasks.addTask (priority, EntityAIBase);</code>
+      </div>
+
+      <h4>To spawn an entity in game</h4>
+      <ol class="noSpaceBefore">
+        <li>While in the world, hit the "<kbd>t</kbd>" key and on the bottom left of the screen
+          you should see a cursor.</li>
+        <li>Type "<kbd>/robot <var>entity</var></kbd>" and replace "<var>entity</var>" with
+          the name of the registered entity. For this lab, it would be "<kbd>/robot
+          chameleon</kbd>".</li>
+      </ol>
+
+      <h4>Robot Damage Events</h4>
+      <div class="indented">
+        <codeBlock>void Robot.onEntityDamage (DamageSource <var>source</var>, float <var>amount</var>)</codeBlock>
+        <p>The above inherited <code>Robot</code> function is called every time your robot entity
+          receives any damage. You won't care about the source or amount of damage; it just matters
+          that the chameleon bot received <em>some</em> kind of damage.</p>
+      </div>
+
+      <h4>Controlling entity visibility</h4>
+      <div class="indented">
+<codeBlock>entity.setInvisible(true);&nbsp;   // Hide entity
+entity.setInvisible(false);   // Show entity</codeBlock>
+      </div>
+
+      <h4>Getting and setting entity position and orientation</h4>
+      <div class="indented">
+<codeBlock>double positionX = robot.posX;    // Entity position as double X,Y,Z
+double positionY = robot.posY;
+double positionZ = robot.posZ;
+
+entity.setLocationAndAngles (
+    double x,      // X Coordinate Position
+    double y,      // Y Coordinate Position
+    double z,      // Z Coordinate Position
+    float  yaw,    // Yaw Angle (left-right direction)
+    float pitch    // Pitch Angle (up-down)
+);</codeBlock>
+      </div>
+
+      <h4>Getting and setting blocks in the world</h4>
+      <div class="indented">
+<codeBlock>World world = entity.worldObj;   // Get the entity's world
+
+// Get the block at a given world position
+Block block = world.getBlock (positionX, positionY, positionZ);
+
+// Get the block metadata for a block at a given world position
+int blockMetadata = world.getBlockMetadata (positionX, positionY, positionZ);
+
+// Set a block at a given position in the world
+world.setBlock (
+    double positionX,    // X Coordinate Position
+    double positionY,    // Y Coordinate Position
+    double positionZ,    // Z Coordinate Position
+    Block  block);       // Block Object
+
+// Set block metadata at a given position in the world
+world.setBlockMetadataWithNotify (
+    positionX, positionY, positionZ, blockMetadata, 0);</codeBlock>
+
+      <p>If you're going to read a block and then later restore it, you'll need to get the block
+        metadata as well as the block object itself (using the above functions).</p>
+      </div>
+
+      <h4>System Time</h4>
+      <div class="indented">
+        <codeBlock>long System.currentTimeMillis()</codeBlock>
+
+        <p>The above method gets the number of milliseconds since January 1, 1970. You can use this
+        value to figure out the current time. For our purposes, where we need <em>elapsed</em> time,
+        you will only care about the <em>difference</em> between timestamps.</p>
+
+        <p>For example:</p>
+
+<codeBlock>long timeThreeSecondsFromNow = (long)(3.0 * 1000) + System.currentTimeMillis();
+boolean threeSecondsElapsed = System.currentTimeMillis() &gt; timeThreeSecondsFromNow;</codeBlock>
+      </div>
+
+
+    </div>
+
+
+    <h2 id="tasks">Tasks</h2>
+    <div class="indented">
+
+
+      <h3>Part 1 &mdash; Create an entity that wanders around the world</h3>
+      <ol>
+        <li>Start by creating a new class called <code>ChameleonBot</code> that extends the
+          <code>Robot</code> class.</li>
+          
+        <li>Implement the primary constructor. This takes in a
+        <code>net.minecraft.world.World</code> parameter and calls the <code>super</code>
+        constructor with the <var>world</var> parameter.</li>
+
+        <li>Inside the constructor, add the <code>EntityAIWander</code> task with priority 1.
+          When you create the new <code>EntityAIWander</code> task, pass in a reference to this new
+          <code>ChameleonBot</code> (<code>this</code>) and the value <code>SPEED_SLOW</code>.</li>
+
+        <li><p>Inside the <code>EntitiesModule</code> class, register the <code>ChameleonBot</code>.
+          Use the name "chameleon", and paint it with the "rainbow_robot" texture.</li>
+
+        <li>Test point. Launch the game, go into a world, and summon the chameleon bot. It should
+          wander around slowly.</li>
+      </ol>
+
+
+      <h3>Part 2 &mdash; Modify the entity to convert into a block when harmed</h3>
+      <ol>
+        <li>Create a new class called <code>EntityAIDisguise</code> that extends
+          <code>EntityAIBase</code> (<code>net.minecraft.entity.ai.EntityAIBase</code>).</li>
+
+        <li>In the <code>EntityAIDisguise</code> class, create a private field of type
+          <code>ChameleonBot</code> named <var>robot</var>.</li>
+
+        <li>Create a constructor that takes in a <code>ChameleonBot</code> parameter and assign that
+          value to the private <code>robot</code> field.</li>
+
+        <li>Implement the following stub methods:
+          <ul class="compact">
+            <li><code>public void startExecuting()</code></li>
+            <li><code>public boolean shouldExecute()</code></li>
+            <li><code>public void resetTask()</code></li>
+            <li><code>public boolean continueExecuting()</code></li>
+          </ul>
+        </li>
+
+        <li>For now, just return <code>true</code> from <code>shouldExecute()</code> and
+          <code>continueExecuting()</code>.</li>
+
+        <li>Now back to the <code>ChameleonBot</code> class. You need to add the
+          <code>EntityAIDisguise</code> task to your chameleon bot. You will also want to create a
+          private field to keep a reference to this task for later. Add this task with priority 2.
+          </li>
+
+        <li>Time to test. Launch the game and summon a new chameleon bot. It should still just
+          wander around slowly.
+      </ol>
+
+
+      <h3>Part 3 &mdash; when damaged, the chameleon bot turns into a log</h3>
+      <ol>
+
+        <li>First off, we need to add a routine to our chameleon bot called
+          <code>hasFreshDamage()</code>. It returns <code>true</code> only if the robot just
+          received fresh damage and this is the first time <code>hasFreshDamage()</code> was called
+          since then. In other words, if you damage chameleon bot, then the first call to
+          <code>hasFreshDamage()</code> will return <code>true</code>, and every other call after
+          that (until the next damage event) should return <code>false</code>.</li>
+
+        <li>Here's the general flow of the <code>EntityAIDisguise</code> task:
+          <ol class="capitals">
+            <li><code>shouldExecute()</code> returns <code>true</code> if the robot has received
+              fresh damage.</li>
+            <li>If <code>shouldExecute()</code> returns <code>true</code>, then the game will
+              automatically call <code>startExecuting()</code>, then <code>updateTask()</code>,
+              and then <code>continueExecuting()</code> until <code>continueExecuting()</code>
+              returns <code>false</code>.</li>
+            <li>The <code>startExecuting()</code> task needs to do the work to disguise the
+              robot.</li>
+            <li>We don't need to implement the <code>updateTask()</code> function; it does nothing
+              for this task.</li>
+            <li>The <code>continueExecuting()</code> function will check the time. If the disguise
+              period is done, it returns false (stop executing). If the robot is still hiding, then
+              return <code>true</code> to keep checking the time.</li>
+          </ol></li>
+
+        <li>Implement the <code>shouldExecute()</code> function. This will use the robot's
+        <code>hasFreshDamage()</code> function you just wrote.</li>
+
+        <li><p>For part 3, the robot will just turn into a log forever when it receives damage
+          (super powers don't come all at once). There are two steps to this:</p>
+
+          <ol>
+            <li>First, hide the robot. This part's easy. Just set the robot to invisible, using the
+              <code>setInvisible()</code> function from the <a href="#notes">notes</a> above.</li>
+            <li>Secondly, we'll need to place a log block where the robot used to be. Get the
+              robot's position, convert to the nearest integer coordinates, and set the block
+              at that position to <code>Blocks.log</code>.</li>
+          </ol>
+        </li>
+
+        <li>Test it out. Launch the game, summon a chameleon bot, and smack it. It should turn into
+          a log and remain that way.</li>
+      </ol>
+
+
+      <h3>Part 4 &mdash; Chameleon bot turns back into a chameleon bot after five seconds</h3>
+      <ol>
+        <li>Now let's have the chameleon bot turn back after hiding for five seconds. To do this, we
+          need to store the time we'll stop hiding. In the <code>EntityAIDisguise</code> task,
+          create a private field of type <code>long</code> that holds the hiding end time. It's also
+          good coding style to give all of your numerical constants descriptive names when possible,
+          so create another <code>private static final long</code> constant named
+          <code>MILLIS_PER_SECOND</code>, which holds the number of milliseconds per second. Use
+          this constant when calculating your hiding end time.</li>
+
+        <li>We want to restore the robot to its old location, so also save away its X, Y, and Z
+          position coordinates. Though an entities position coordinates are normally
+          double-precision floating-point values, you will need to save these as world integer
+          coordinates. To assist in this conversion, create a private helper function named
+          <code>round</code> that takes a <code>double</code> and returns a rounded
+          <code>int</code>. <code>Math.round()</code> will make this task easy. </li>
+
+        <li>Place a <code>Blocks.log</code> block at the robot's old location.</li>
+
+        <li>The <code>continueExecuting()</code> function should return <code>true</code> as long as
+          the robot is still in hiding time. When hiding time is over,
+          <code>continueExecuting()</code> should return false.</li>
+
+        <li>Now we'll start filling in <code>resetTask()</code>, which will be called when
+          <code>continueExecuting()</code> returns false. In this method, set the block at the hide
+          position to <code>Blocks.air</code>, and make the robot visible again.</li>
+
+        <li>Now when you test your chameleon bot, it will hide as a log for five seconds, and then
+          the log will disappear and the robot will become visible again.</li>
+      </ol>
+
+
+      <h3>Part 5 &mdash; Chameleon bot blends in with surrounding blocks</h3>
+      <p class="indented">Now the chameleon bot will look around itself to figure out which block
+        type it should choose to use to hide itself, so that it blends in with the surrounding
+        scenery.</p>
+      <ol>
+        <li>In the <code>startExecuting()</code> function, calculate the robot hide position
+          (nearest integer world coordinates) as before.</li>
+
+        <li>Now have the chameleon look around to find a block to mimic (in the
+          <code>startExecuting()</code> function). It will use that nearby block type as its
+          disguise.
+
+        <li>
+          <p>If the robot's hiding position is <code>hideX</code>, <code>hideY</code> and
+            <code>hideZ</code>, then you'll look at neighbors like <code>hideX - 1</code>,
+            <code>hideY + 1</code>, and <code>hideZ</code>. Since we'll skip the block exactly at
+            the robot's world coordinates (<code>hideX, hideY, hideZ</code>), that leaves 26
+            neighboring blocks total to examine. Find one that isn't <code>Blocks.air</code> &mdash;
+            that will be the one we impersonate.</p>
+          <p>There are several ways to examine all 26 neighboring blocks. You could use a
+            two-dimensional array of offsets (-1, 0, +1) and then just check each of those offsets
+            in a single loop. Or you could create a triply-nested for loop, which computes offsets
+            in X, Y and Z. The implementation is up to you.</p>
+        </li>
+
+        <li>When checking neighboring blocks, if the current block is <code>Blocks.air</code>, then
+          skip this block and continue looking at neighbors.</li>
+
+        <li><p>If you find a neighboring block that isn't air, then perform the following steps:</p>
+          
+          <ol>
+            <li>Save the neighbor's block and block metadata so we can restore it later (see <a
+              href="#notes">notes</a>).</li>
+
+            <li>If you found a good neighbor block to impersonate, you need to replace the block
+              at the robot's position, so save off <em>that</em> block and its metadata as well.</li>
+
+            <li>Set the robot to invisible.</li>
+
+            <li>Set the block (and its metadata) at the robot's position to the neighbor block
+              information you want to impersonate.</li>
+
+            <li>Once you're done setting up the imposter block, you can return from the
+              <code>startExecuting()</code> function.
+          </ol>
+          </li>
+
+        <li>If you make it out of the search loop(s) without finding any neighbor blocks that aren't
+          air, then the chameleon bot has nothing to mimic, so it can't disguise itself. In this
+          case, set the hiding end time to the current time, and set the replaced block field to
+          null.</li>
+
+        <li>In the <code>resetTask()</code> function, you'll only restore the hiding position to the
+          original block if the chameleon bot was able to hide (if the replacedBlock field isn't
+          null). In this case, set the imposter block back to its original value, and also restore
+          its original metadata.</li>
+
+        <li>Finally (in <code>resetTask()</code>), set the chameleon bot's position to its original
+          hiding position, and set its <var>yaw</var> and <var>pitch</var> angles to 0 (see <a
+          href="#notes">notes</a>). After that make the robot visible again.</li>
+
+        <li>That's it! Perform a final test of your robot. When you damage it, it should change into
+          a block of the same type as the surrounding landscape. After five seconds, the imposter
+          block should disappear, the original landscape block should be restored, and the chameleon
+          bot should reappear in the original location.</li>
+      </ol>
+
+    </div> <!-- #tasks -->
+
+  </div> <!-- #content -->
+
+  <div id="footer">
+    <div class="prev"><a href="lab7.html">&#x25c0; Lab 7</a></div>
+    <div class="home"><a href="../units.html">Home</a></div>
+    <div class="next"><a href="lab9.html">Lab 9 &#x25b6;</a></div>
+  </div>
+</body>
+</html>

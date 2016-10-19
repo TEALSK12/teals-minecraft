@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- vim: set textwidth=100 shiftwidth=2 tabstop=2 : -->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>TEALS Minecraft &ndash; Lab 9: Collector Robot</title>
+  <link rel="stylesheet" type="text/css" href="../style/site.css">
+</head>
+
+<body>
+
+  <h1 class="lab">Lab 9: Collector Robot</h1>
+  <div id="content">
+
+    <h2>Objective</h2>
+    <div class="indented">
+      <p> In lab 9, you will create a robot that wanders around the map looking for loose items
+      like gold or diamond and collecting them. If the entity takes any damage (either by wandering
+      into a bad situation, getting attacked by other entities, or getting attacked by other
+      players), it drops all of its items and stumbles around for twenty seconds until it has
+      recovered enough to continue collecting stuff. While it's dazed, nearby players then have a
+      chance to grab the collector bot's loot before it comes to its senses. </p>
+    </div>
+
+    <!-- ======================================================================================= -->
+    <h2 id="notes">Notes</h2>
+    <div class="indented">
+
+      <h4>To Spawn An Entity In Game</h4>
+      <ul class="noSpaceBefore">
+        <li>Type "<code>/robot <u>entity</u></code>", where <u>entity</u> is the name of the
+          registered robot.</li>
+        <li><em>For this lab, it would be </em>"<kbd>/robot collector</kbd>"</li>
+      </ul>
+
+      <h4>To Add a New Task with a Specific Priority</h4>
+      <div class="indented">
+        <codeBlock>void tasks.addTask (int <var>priority</var>, EntityAIBase <var>task</var>)</codeBlock>
+      </div>
+
+      <h4>To Get A List&lt;Entity&gt; Of All Entities In An Entity's World</h4>
+      <div class="indented">
+        <codeBlock>List&lt;Entity&gt; <var>entityList</var> = (List&lt;Entity&gt;) entity.worldObj.getLoadedEntityList();</codeBlock>
+        <p> Each item in this list is of type <code>Entity</code>. </p>
+      </div>
+
+      <h4>Robot Navigation (Pathfinding)</h4>
+      <div class="indented">
+        <codeBlock>entity.getNavigator().tryMoveToEntityLiving(Entity <var>other</var>, float <var>speed</var>);</codeBlock>
+        <p>For the <code>float speed</code> parameter, use <code>Robot.SPEED_FAST</code>,
+        <code>Robot.SPEED_NORMAL</code>, or <code>Robot.SPEED_SLOW</code>.</p>
+
+        <codeBlock>entity.getNavigator().clearPathEntity();   // Stop robot navigation</codeBlock>
+      </div>
+
+      <h4>Getting Distance Between Two Entities</h4>
+      <div class="indented">
+        <codeBlock>float distance = entity1.getDistanceToEntity(entity2);</codeBlock>
+      </div>
+
+      <h4>Adding &amp; Removing Items In The World</h4>
+      <div class="indented">
+<codeBlock>void dropItem (Item <var>item</var>, int <var>amount</var>);
+item.worldObj.removeEntity(EntityItem <var>item</var>);</codeBlock>
+      </div>
+
+      <h4>Managing <code>EntityItem</code>'s and <code>ItemStack</code>.</h4>
+      <div class="indented">
+<codeBlock>ItemStack itemStack = entityItem.getEntityItem();
+int amount = itemStack.stackSize;
+Item item = itemStack.getItem();
+String printableItemName = item.getUnlocalizedName();    // For Debugging</codeBlock>
+      </div>
+
+      <h4>Hash Map Methods</h4>
+      <div class="indented">
+<codeBlock>boolean hashMap.contains(<var>key</var>);  // Checks for existence of a key
+void hashMap.put (<var>key</var>, <var>value</var>);  // Adds an entry
+ValueType hashMap.remove (<var>key</var>); // Removes an entry
+ValueType hashMap.get (<var>key</var>);    // Just examines an entry
+
+// Constructing HashMaps
+HashMap&lt;KeyType,ValueType&gt; hashMap = new HashMap&lt;KeyType,ValueType&gt;();
+
+Set&lt;KeyType&gt; keySet = hashMap.keySet();   // Getting a set of all keys in a hash map
+
+// Examining the contents of a hash map
+for (KeyType key : hashMap.keySet()) {
+    ValueType value = hashMap.get(key);
+}
+
+void hashMap.clear();     // Clears a hash map</codeBlock>
+      </div>
+
+      <h4>Robot Damage Events</h4>
+      <div class="indented">
+        <codeBlock>public void Robot.onEntityDamage (DamageSource <var>source</var>, float <var>amount</var>);</codeBlock>
+        
+        <p>This method is called whenever the robot receives any kind of damage. You won't care
+        about the type or amount of damage, but you will drop the robot's inventory and start a stun
+        cycle whenever it happens.</p>
+      </div>
+
+      <h4>System Time</h4>
+      <div class="indented">
+        <codeBlock>long System.currentTimeMillis()</codeBlock>
+
+        <p>The above method gets the number of milliseconds since January 1, 1970. You can use this
+        value to figure out the current time. For our purposes, where we need <em>elapsed</em> time,
+        you will only care about the <em>difference</em> between timestamps.</p>
+
+        <p>For example:</p>
+
+<codeBlock>long timeThreeSecondsFromNow = (long)(3.0 * 1000) + System.currentTimeMillis();
+boolean threeSecondsElapsed = System.currentTimeMillis() &gt; timeThreeSecondsFromNow;</codeBlock>
+      </div>
+
+    </div>
+
+    <!-- ======================================================================================= -->
+    <h2>Tasks</h2>
+    <div id="tasks" class="indented">
+
+
+      <h3>Part 1 &mdash; Stub In The New <code>CollectorBot</code> Entity</h3>
+      <ol>
+        <li> Start by creating a new class called <code>CollectorBot</code> that extends the
+          <code>Robot</code> class. Implement the default constructor that takes in a
+          <code>net.minecraft.world.World</code> object as its parameter. Call the super
+          constructor with that world parameter. </li>
+
+        <li> In the constructor, add the <code>EntityAIWander</code> task with priority 1.
+          When you create the <code>EntityAIWander</code> task, pass in this new collector
+          bot and a speed of <code>SPEED_NORMAL</code>. </li>
+
+        <li> Add the new robot to the <code>EntitiesModule</code> class. Register the
+          <code>CollectorBot</code> with a name of "collector", and a texture of "gold_robot". </li>
+
+        <li> Start up the game and issue the command "<kbd>/robot collector</kbd>". You should see a
+          gold-colored robot that wanders around the map and does nothing else. </li>
+      </ol>
+
+
+      <h3>Part 2 &mdash; Stub In A New <code>EntityAICollectLoot</code> Task</h3>
+      <ol>
+        <li> Create a new class called <code>EntityAICollectLoot</code> that extends
+          <code>EntityAIBase</code>. </li>
+
+        <li> The constructor takes a <code>CollectorBot</code> and a <code>float</code> search
+          radius. Store both of these values in member variables of the new task.
+          </li>
+
+        <li> Override the methods <code>public boolean shouldExecute()</code> and
+          <code>public boolean continueExecuting()</code>. The collection task will run all the
+          time at first, so both of these methods should just return true. </li>
+
+        <li> Stub in the override method <code>public void updateTask()</code>. For now, just return
+          immediately. </li>
+
+        <li> In the <code>CollectorBot</code> constructor, create a new
+          <code>EntityAICollectLoot</code> task. The collect-loot task's constructor will take the
+          new collector bot's reference and a search radius. Use a search radius of 10. You'll need
+          to have access to this task later on, so store a reference to it in a local class member
+          variable. Finally, add this task with priority 2. </li>
+
+        <li> Verify your code so far by running the game and issuing the command "<kbd>/robot
+          collector</kbd>". You should see a gold-colored robot that still just wanders around the
+          map and does nothing else (since the <code>EntityAICollectLoot</code> task doesn't yet do
+          anything). </li>
+      </ol>
+
+
+      <h3>Part 3 &mdash; Implement Basic <code>CollectorBot</code> Functionality</h3>
+      <p class="indented"> Now it's time to implement the basic loot searching and collection task.
+        We want the robot to find the nearest piece of loot
+        (<code>net.minecraft.entity.item.EntityItem</code>) within its search radius, make its way
+        to that item, and then pick it up. </p>
+
+      <ol>
+
+        <li> In the <code>EntityAICollectLoot</code> task class, we now need to implement the first
+          phase of <code>updateTask()</code>. To begin with, we'll first need a task class variable
+          to track the currently targeted piece of loot: call it <code>targetLoot</code>. Loot items
+          wil be of type <code>EntityItem</code>. Initialize it to <code>null</code> to begin
+          with.</li>
+
+        <li> The <code>updateTask()</code> method has two parts: in the first part, the task is to
+          choose a piece of loot if we don't currently have one targeted. In the second part, when
+          we have a piece of loot chosen, the task is to move to and collect that item. </li>
+
+        <li> Create a function to select the next piece of loot. It will only be used by the
+          <code>EntityAICollectLoot</code> task, so it should be private. It will return the
+          selected <code>EntityItem</code>, and doesn't need any arguments. Call it
+          <code>selectNewTarget</code>. </li>
+
+        <li> <p>In the <code>selectNewTarget</code> function, get a list of all entities in the
+          collector bot's world. You will then iterate through this list, and find the entity that
+          matches the following criteria:</p>
+
+          <ol class="compact">
+            <li> it must be an instance of <code>EntityItem</code>, </li>
+            <li> it must not be marked "dead" (<code>item.isDead</code>), and </li>
+            <li> it must be within the search radius of the collector bot's location. </li>
+            <li> it must be the single closest entity </li>
+            </ol>
+
+          <p> (Note that items are marked dead when when they are scheduled to be deleted or are
+            destroyed by another entity.) </p>
+          </li>
+
+        <li> If you find an item that matches the above criteria, then set that item as the target
+          loot, and return the new target. </li>
+
+        <li> At the beginning of <code>updateTask()</code>, if we don't currently have a target loot
+          item, get a new piece of target loot using the <code>selectNewTarget()</code> function.
+          If we couldn't find a new target item that meets our criteria, then return from
+          <code>updateTask()</code>. </li>
+
+        <li> After we've made sure that we have an item as our target loot, check to see if anything
+          has marked it as dead. If so, stop the robot's navigation, set <code>targetLoot</code> to
+          null, and return from <code>updateTask</code>.
+
+        <li> Move towards the loot target at normal speed. </li>
+
+        <li> If the collector bot is within a distance of 1.5 from the target loot, then it can pick
+          it up. Stop the robot navigation, remove the target loot from the world, and set the
+          targetLoot to null. </li>
+
+        <li> <p>Test out the collector bot. To do this, load items in your inventory that you can
+        drop for the collector bot to find. When you bring up the inventory in game, you can click
+        on an item multiple times to create a "stack" of items (you'll see a count over the selected
+        item). Drag this stack of items to an inventory slot, and hit escape to get back to the
+        game. In game, select the item slot you want, and then drop these items by pressing the
+        '<kbd>q</kbd>' key. Now spawn the collector bot with the "<kbd>/robot collector</kbd>"
+        command. It should run around and gather up the items you dropped. </p> </li>
+
+      </ol>
+
+
+      <h3>Part 4 &mdash; Track items in the robot's inventory</h3>
+      <p class="indented"> Up to now, the robot really just removes items from the world; it just
+      looks like it's been picking them up. Now we need to actually keep track of the items that the
+      robot has gathered. We'll need this for the next part, where the robot drops all the items it
+      has collected. </p>
+      <ol>
+
+        <li> The first task is to add an item inventory to the <code>CollectorBot</code>. We'll use
+          a <code>HashMap&lt;Item,Integer&gt;</code> for this. Individual items will be the keys for
+          this inventory, and the values will be the total count for each item. Create a class
+          member variable for this (name it <code>inventory</code>), and initialize it to a new
+          HashMap.</li>
+
+        <li> <p>Add a new <code>CollectorBot</code> method with the following signature:</p>
+          <codeBlock>public void addItem (EntityItem <var>entityItem</var>)</codeBlock> </li>
+
+        <li> In the new <code>addItem</code> function, as outlined in the notes section, you'll get
+          the item stack from the given <var>entityItem</var>. From that, you'll get the
+          item and item count. Compute the new total count for that item type. You will need to
+          handle the case where the robot currently has no items of that type, and the case where it
+          already has some number of those items. Once you've computed the new total, put that entry
+          in the <code>inventory</code> hash map. </li>
+          
+        <li> It may help to create a small function to print the current robot inventory (using
+          <code>System.out.printf()</code>) as you develop this part. See the notes section for a
+          way to examine the contents of a hash map, and the tip for getting a printableItemName for
+          a given item. You can use this for your inventory print routine, which you can then call
+          every time you add a new item. </li>
+
+        <li> Now that you have a way to add and track items to the robot's inventory, we need to
+          have the <code>EntityAICollectLoot</code> task call this method when we pick up new loot.
+          Do this in <code>updateTask()</code>, when we determine that we're within range of our
+          target loot. Add the call to <code>robot.addItem</code> when we pick up the target loot.
+          </li>
+
+        <li> Is everything implemented correctly? Run the game to find out. Make sure that the robot
+          picks up items. If you implemented the debug print function, verify that the inventory is
+          growing as you expect. </li>
+
+      </ol>
+
+
+      <h3>Part 5 &mdash; Drop all items when the robot is damaged</h3>
+      <p class="indented"> Now we'll add the behavior that the robot drops all of its inventory
+        whenever it receives any damage. </p>
+      <ol>
+        <li> <p>First, we'll provide an override of the <code>CollectorBot</code>'s
+          <code>onEntityDamage</code> method. The signature for this method is</p>
+          <codeBlock class="indented">public void onEntityDamage (DamageSource <var>source</var>, float <var>amount</var>);</codeBlock>
+          <p>The implementation of this method is simple: just call a new <code>CollectorBot</code>
+          method <code>dropInventory()</code> with no arguments.</li>
+
+        <li> Now we need to implement <code>private void dropInventory()</code>. This method needs
+          to iterate through all items in its inventory, and drop the correct count of each item.
+          See the notes section for <code>dropItem</code>. Once all items have been dropped, clear
+          the robot's inventory. The notes section has the information you need on how to clear a
+          hash map.</li>
+
+        <li> After dropping the robot's inventory, and if you implemented the
+          <code>printInventory</code> debug method, you may want to call this to verify that nothing
+          is left in the robot's inventory. </li>
+
+        <li> Time to test. Run the game, toss out a bunch of items for the robot to collect, and
+          then smack it. You will probably see that the robot turns red when you hit it, but
+          otherwise nothing else will look different. In particular, there won't be a bunch of
+          objects laying around the robot. What happened? </li>
+
+        <li> The <code>CollectorBot</code> is very industrious. Even if it properly dropped all of
+          its inventory on the ground, the <code>EntityAICollectLoot</code> task is still running,
+          so it will just immediately think "look at all this loot!", and pick it right back up. You
+          can keep thwacking <code>CollectorBot</code> upside the head, and it will keep dropping
+          and immediately picking back up all of its loot until it keels over, keeping everything it
+          gathered. Now what? </li>
+
+      </ol>
+
+
+      <h3>Part 6 &mdash; CollectorBot stops collecting items when damaged</h3>
+      <p class="indented"> The key to making <code>CollectorBot</code> more useful is adding a delay
+      before it picks up all items it dropped. We'll have the robot wander around stunned for a
+      while before the its loot collection task resumes. That will complete our
+      <code>CollectorBot</code> implementation. </p>
+
+      <ol>
+
+        <li> In <code>EntityAICollectLoot</code>, we're going to add support for suspending the
+          collection task for a period of time. We'll be modifying the <code>shouldExecute</code>
+          and <code>continueExecuting</code> tasks to do this. Before we do that, we'll need a new
+          private long field named <code>suspendEnt</code> before we start. Initialize it to zero to
+          start with. This field will store the time at which task suspension is over. </li>
+
+        <li> Reference the notes section to review system time methods. </li>
+
+        <li> <p> Add a new method with the following signature: </p>
+          <codeBlock>public void suspend (float <var>suspendSeconds</var>)</codeBlock>
+          <p> This method will take the specified number of seconds and the current time in
+          milliseconds, and compute the time when the task suspension should end (also in
+          milliseconds). Store that result in <code>suspendEnd</code>. </li>
+
+        <li> If <code>suspendEnd</code> is zero, then we are not suspended. Given that, update the
+          <code>continueExecuting</code> method to return true only if we're not currently
+          suspended. </li>
+
+        <li> Update the <code>shouldExecute</code> method. Given the current system time and the
+          suspendEnd variable, determine if we're still in the suspend time period. If we are still
+          suspended, then return false (we should not execute the task). If we are either not
+          suspended or are now past the suspension time period, set <code>suspendEnd</code> to zero
+          to indicate that the collection task is not suspended, and return true (we should execute
+          our main task). </li>
+
+        <li> Back in the <code>CollectorBot</code> class, and using the code we just wrote above,
+          suspend the collection task for 20 seconds when we take any damage. </li>
+
+        <li> Time for the final test. Run the game, and feed the collector bot a bunch of items. Now
+          smack the bot (from a distance), and you should notice that it drops all of its loot, and
+          doesn't pick it back up. (Note that if you're too close, your player will end up picking
+          up the items, which is why you want a bit of distance before striking the robot.) Wait 20
+          seconds, and verify that the robot starts picking things up again. </li>
+
+      </ol>
+
+
+      <h3>Part 7 &mdash; Fit & Finish</h3>
+        <p class="indented"> Take a look at all of your code. You've added a bunch, changed a bunch,
+        and probably wrestled a bit with different parts. How can you make the code cleaner? Easier
+        to read? Are you using magic numbers where you should instead have used class constants? Is
+        your code well documented? Review the program logic and see if you can accomplish the same
+        tasks in simpler ways. How much code can you simplify or reduce? Re-order your methods so
+        that reviewers and other programmers can follow the logic easier. Are there places where you
+        could use a variable to hold a common result? Are your variable names clear? These are just
+        a few things to look at, but make a huge difference in your final result. </p>
+
+    </div> <!-- #tasks -->
+
+  </div> <!-- #content -->
+
+  <div id="footer">
+    <div class="prev"><a href="lab8.html">&#x25c0; Lab 8</a></div>
+    <div class="home"><a href="../units.html">Home</a></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+/*
+  color:  #099bdd;  // Teal
+  color:  #a5d028;  // Green
+*/
+
+a {
+  text-decoration: none;
+  color: #78dbff;
+}
+
+a.nyi {
+  color: #a0a0a0;
+  font-style: italic;
+  pointer-events: none;   /* Disable link interaction */
+  cursor: default;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  font-family: corbel, arial, helvetica, sans serif;
+  color: #ffffff;
+  background-color: #606060;
+  margin: 0;
+}
+
+div#banner {
+  height: 128px;
+  background: url("../images/mc-landscape.png");
+  margin-bottom: 0;
+}
+
+div#content {
+  margin: 2em 8% 0 8%;
+  max-width: 40em;
+}
+
+div#footer {
+  background-color: #484848;
+  text-align: center;
+  margin-top: 3em;
+  padding: 1em 25%;
+}
+
+div#footer div.home {
+  display: inline-block;
+  width: 10em;
+}
+
+div#footer div.prev {
+  float: left;
+}
+
+div#footer div.next {
+  float: right;
+}
+
+.indented {
+  margin-left: 4ex;
+}
+
+.noPadding {
+  padding: 0;
+}
+
+.noSpaceBefore {
+  margin-top: 0;
+}
+
+.noSpaceAfter {
+  margin-bottom: 0;
+}
+
+.nyi {
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+.wip {
+  background: #808020;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  color: #a5d028;
+  font-weight: normal;
+}
+
+h1.lab {
+  font-size: 300%;
+  background-color: #484848;
+  padding: 0.5em 8%;
+  margin-top: 0;
+}
+
+h1.title {
+  font-size: 350%;
+  background-color: #606060;
+  padding: 0;
+  margin: 1em 0 0 0;
+}
+
+h1.subtitle {
+  margin-top: -0.25em;
+  font-size: 220%;
+}
+
+h2 {
+  font-size: 200%;
+  margin-top: 1.5em;
+  margin-bottom: 0;
+}
+
+h3 {
+  margin-bottom: 0.5em;
+}
+
+h4 {
+  margin-bottom: 0;
+}
+
+ol.capitals {
+  list-style-type: upper-alpha;
+}
+
+ol li {
+  margin-bottom: 0.5em;
+}
+
+ul.noBullet li {
+  list-style-type: none;
+}
+
+ol.compact li, ul.compact li {
+  margin-bottom: 0;
+}
+
+dt {
+  margin-top: 1em;
+}
+
+dt + dt {
+  margin-top: 0;
+}
+
+table.toc {
+  border-collapse: collapse;
+}
+
+table.toc td {
+  padding: 0 0 2em 3ex;
+  vertical-align: top;
+}
+
+table.toc h2 {
+  font-size: 120%;
+  margin: 0;
+}
+
+table.toc h1 {
+  font-size: 200%;
+  margin: 0;
+}
+
+table.toc td.unit {
+  font-size: 200%;
+  color: #a5d028;
+  margin: 0;
+  padding: 0 0 1em 0;
+}
+
+code {
+  color: #ffeeaa;
+}
+
+pre {
+  color: #ffeeaa;
+  font-size: 90%;
+}
+
+codeBlock {
+  display: block;
+  white-space: pre;
+  font-family: monospace;
+  color: #ffeeaa;
+  font-size: 90%;
+}
+
+/*  S P E C I A L   T A G S  */
+
+comment {
+  display: inline;
+  color: #ff7777;
+  font-style: italic;
+}

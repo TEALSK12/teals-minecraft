@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- vim: set textwidth=100 shiftwidth=2 : -->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>TEALS Minecraft &ndash; Lab 5: Tree-Growing Blocks</title>
+  <link rel="stylesheet" type="text/css" href="../style/site.css">
+</head>
+
+<body>
+
+  <h1 class="lab">Lab 5: Tree-Growing Blocks</h1>
+  <div id="content">
+
+    <h2>Objective</h2>
+    <div class="indented">
+      <p>For lab 5, you will work more on orienting ourselves in Minecraft's 3D world. You'll do
+      this by creating several different tree-growing blocks, where each tree has a characteristic
+      shape: cube, cylinder, cone, and sphere. You should be able to easily finish the cube-shaped
+      tree for this lab, and the cylinder-, cone- and sphere-shaped trees are left to you as extra
+      credit.</p>
+    </div>
+
+    <h2 id="notes">Notes</h2>
+    <div class="indented">
+
+      <h4 id="ctor">Each tree &ldquo;seed&rdquo; block has a specialized constructor:</h4>
+      <div class="indented" style="margin-top:1em;">
+
+        <img src="../images/tree-cube.png" width="200" height="200">
+<pre style="margin:0 0 3em 0;">public TreeCubeBlock (Material material, int baseHeight, int size)
+material:    The material of the block
+baseHeight:  The height of the bare trunk to the bottom of the tree leaves
+size:        The width, height and depth of the tree leaves</pre>
+
+        <img src="../images/tree-cylinder.png" width="200" height="200" style="margin-bottom:0;">
+<pre style="margin:0 0 3em 0;">public TreeCylinderBlock (Material material, int baseHeight, int height, int radius)
+material:    The material of the block
+baseHeight:  The height of the bare trunk to the bottom of the tree leaves
+height:      The height of the tree leaves
+radius:      The radius of the tree leaves</pre>
+
+        <img src="../images/tree-cone.png" width="200" height="200" style="margin-bottom:0;">
+<pre style="margin:0 0 3em 0;">public TreeConeBlock (Material material, int baseHeight, int height, int baseRadius)
+material:    The material of the block
+baseHeight:  The height of the bare trunk to the bottom of the tree leaves
+height:      The height of the tree leaves
+baseRadius:  The radius of the tree leaves at the bottom</pre>
+
+        <img src="../images/tree-sphere.png" width="200" height="200" style="margin-bottom:0;">
+<pre style="margin:0 0 3em 0;">public TreeSphereBlock (Material material, int baseHeight, int radius)
+material:    The material of the block
+baseHeight:  The height of the bare trunk to the bottom of the tree leaves
+radius:      The radius of the tree leaves</pre>
+      </div>
+
+      <h4>Trees will be made out of two types of blocks: log and leaves</h4>
+      <div class="indented">
+        <p>The <code>Blocks.log</code> blocks make up the trunk of the tree, and
+        <code>Blocks.leaves</code> make up the body (leaves) of the tree.</p>
+      </div>
+
+      <h4>The trunks of the trees are all similar</h4>
+      <div class="indented">
+        <p>Each tree trunk will extend from the ground up to the middle of the leaves. This is
+        actually important because Minecraft leaves blocks have an interesting property: </p>
+      </div>
+
+      <h4>Leaf blocks start to disappear over time the further they are from a log block</h4>
+      <div class="indented">
+        <p>Blocks.leaves slowly disappear the further they are from a Blocks.log type of block. This
+        ends up making trees look more organic, but might surprise you if you're not expecting
+        it.</p>
+      </div>
+
+      <h4>Tree seed blocks will use the following already-supplied textures:</h4>
+      <div class="indented">
+        <ul>
+          <li>tree_cube_block</li>
+          <li>tree_cylinder_block</li>
+          <li>tree_cone_block</li>
+          <li>tree_sphere_block</li>
+        </ul>
+      </div>
+
+      <h4>Trees grow up immediately, so you will implement the <code>onBlockAdded()</code>
+          method</h4>
+      <div class="indented">
+
+<pre>public void onBlockAdded (World world, int locX, int locY, int locZ) { ... }</pre>
+
+        <p> The code in this method executes as soon as the block is placed in the Minecraft
+        world.</p>
+      </div>
+
+      <h4>Use the <code>world.setBlock()</code> method to place tree blocks</h4>
+      <div class="indented">
+<pre>void world.setBlock (int locX, int locY, int locZ, Block blockType);</pre>
+        <p> Your code inside <code>onBlockAdded()</code> will set blocks at the coordinates [locX,
+        locY, locZ]. The entire job in this lab is to put the right blocks at the right coordinates.
+        Remember that in Minecraft, the horizon stretches out in X and in Z, and the Y coordinate
+        goes up.</p>
+      </div>
+
+    </div>
+
+    <h2>Tasks</h2>
+    <div id="tasks" class="indented">
+
+      <p> This lab has four parts. You should be able to easily complete the cube-tree growing block
+      in this lab. Parts 2&ndash;4 are increasingly more difficult, but should be achievable with a
+      bit of thinking. The challenge for all of these is working out the algorithm and mathematics
+      needed to accomplish this.</p>
+
+      <h3>Part 1 &mdash; Create a tree-cube growing block</h3>
+      <div class="indented">
+        <p> For this task, you'll be creating a tree where the leaves form a cube (all sides
+        square), where the length/depth/height of each side is given by the size parameter.</p>
+
+        <ol>
+          <li> Create a new class <code>TreeCubeBlock</code>. As usual, this will extend
+            <code>Block</code>.</li>
+
+          <li> Add a constructor for <code>TreeCubeBlock</code>. This will take the parameters
+            <code>(Material material, int baseHeight, int size)</code>. In the constructor you'll
+            need to call the superclass with the <code>material</code> parameter as usual. </li>
+
+          <li> The <code>TreeCubeBlock</code> will have a single method: <code>onBlockAdded</code>.
+            In the <code>onBlockAdded</code> method, you'll be calling <code>world.setBlock()</code>
+            to place the trunk and leaves. Because the trunk should extend from the ground up into
+            the middle of the volume of leaves, it's easier to place all of the leaves first.</li>
+
+          <li> Implement the code to place leaves in a cube shape, <code>baseHeight</code> off the
+            ground, and with a side length of <code>size</code>. </li>
+          
+          <li> Now grow a trunk from the ground up to the middle of the body of leaves. Remember
+            that the trunk is built out of <code>Blocks.log</code>. </li>
+
+          <li> Finally, we'll need to add our new custom tree-cube growing block to your inventory
+            of custom blocks. Go to the <code>BlocksModule</code> class, and add the new
+            <code>TreeCubeBlock</code>. Remember to use the "tree_cube_block" texture for the block,
+            and create an instance with a reasonable set of constructor parameters to create a
+            reasonably-sized cube tree. </li>
+        </ol>
+      </div>
+
+      <h3>Part 2 &mdash; Create a tree-cylinder growing block</h3>
+      <div class="indented">
+        <p> Now for something a little more difficult: creating a tree in the shape of a cylinder.
+        Use the <a href="#ctor">constructor given above</a> in the <a href="#notes">notes</a>
+        section above. </p>
+
+        <p> The trick to this part (and the next two parts) is to consider that a cone, cylinder and
+        sphere all fit inside a box of some size. You will iterate over all blocks in the world just
+        as you did for the cube tree, but then will need to determine whether each block is inside
+        or outside of the cylinder. If it's inside (or on the surface of) the cylinder, then set it
+        to a leaf block. If a block is outside the cylinder, then don't set it. </p>
+
+        <p> How do you determine if each block is inside the cylinder? That's the puzzle. Don't just
+        sit at the computer trying to code it out &mdash; get out a pencil and paper and work it out
+        there first. If you're allowed to work in groups, put your heads together to figure it out.
+        </p>
+
+        <p> All points in a circle are closer to the center than the radius of that circle. </p>
+
+        <p> Hint: remember the Pythagorean theorem? </p>
+
+        <p> Here's another hint: you can think of a cylinder as a stack of circles. </p>
+
+        <p> Except for the body of the <code>onBlockAdded()</code> method, all of the steps for this
+        task are similar to the ones for the tree-cube block. </p>
+      </div>
+
+      <h3>Part 3 &mdash; Create a tree-sphere growing block</h3>
+      <div class="indented">
+        <p> Now try to figure out how to create a tree with leaves in the shape of a sphere. This
+        one is either easier or harder than the cylinder tree, depending on how you think about it.
+        Use the <a href="#ctor">constructor given above</a> in the <a href="#notes">notes</a>
+        section above. </p>
+        
+        <p> Hint: all points inside a sphere are closer to the center than the radius of that
+        sphere. </p>
+
+        <p> Hint: the Pythagorean theorem works in three dimensions too! </p>
+      </div>
+
+      <h3>Part 4 &mdash; Create a tree-cone growing block</h3>
+      <div class="indented">
+        <p> Is a cone-tree easier or harder than a sphere tree? I don't know, but I think it might
+        be a bit harder. Use the <a href="#ctor">constructor given above</a> in the notes. </p>
+
+        <p> Hint: a cone is like a cylinder, except that the radius decreases to zero as you go
+        toward to the top. You'll probably want to copy and tweak your cylinder code, and modify the
+        radius in your loops. </p>
+      </div>
+
+    </div> <!-- #tasks -->
+  </div> <!-- #content -->
+
+  <div id="footer">
+    <div class="prev"><a href="lab4.html">&#x25c0; Lab 4</a></div>
+    <div class="home"><a href="../units.html">Home</a></div>
+    <div class="next"><a href="lab6.html">Lab 6 &#x25b6;</a></div>
+  </div>
+
+</body>
+</html>

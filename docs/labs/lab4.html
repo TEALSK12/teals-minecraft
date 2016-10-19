@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- vim: set textwidth=100 shiftwidth=2 : -->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>TEALS Minecraft &ndash; Lab 4: Crystals and Infections</title>
+  <link rel="stylesheet" type="text/css" href="../style/site.css">
+</head>
+
+<body>
+
+  <h1 class="lab">Lab 4: Crystals and Infections</h1>
+
+  <div id="content">
+
+    <h2>Objective</h2> <div class="indented">
+      <p>In lab 4, you will continue to create custom blocks. You will be creating a block and item
+      that generate crystal towers of random height, and an "infection" block that infects the
+      Minecraft world whenever a player draws near.</p>
+    </div>
+
+    <h2 id="notes">Notes</h2>
+    <div class="indented">
+
+      <h4>Test to see if a block is dirt</h4> <div class="indented">
+        <p class="noSpaceBefore">
+        <code>if (someBlock.equals(Blocks.dirt)) { ... }</code></p>
+      </div>
+
+      <h4>Get block at location x, y, z.</h4> <div class="indented">
+        <p class="noSpaceBefore">
+        Use <code>Block block = world.getBlock(x, y, z)</code>.</p>
+      </div>
+
+      <h4>Set block at location x, y, z.</h4> <div class="indented">
+        <p class="noSpaceBefore">
+        Use <code>world.setBlock(x, y, z, blockType)</code>.</p>
+      </div>
+
+      <h4>Block types used in this lab:</h4> <div class="indented">
+        <ul class="noSpaceBefore noPadding compact noBullet">
+          <li><code>Blocks.air</code></li>
+          <li><code>Blocks.gold_block</code></li>
+          <li><code>Blocks.coal_block</code></li>
+          <li><code>Blocks.leaves</code></li>
+          <li><code>Blocks.log</code></li>
+        </ul>
+      </div>
+
+      <h4>Set block step sound</h4> <div class="indented">
+        <p class="noSpaceBefore"> This is the sound the block makes when you step on it:
+        <code>setStepSound(Block.soundTypeXXX)</code>.</p>
+      </div>
+
+    </div>
+        
+    <h2>Tasks</h2> <div class="indented">
+
+      <h3>Part 1 &mdash; Create a crystal-growing block</h3> <div class="indented">
+
+        <p>For part 1, you will create a block that grows a crystal of random height, from 10 to 20
+        blocks above the base block.</p>
+
+        <ol>
+          <li> Create a new class that extends Block called <code>CrystalGrowingBlock</code>. The
+            public constructor should accept a <code>Material</code> parameter that is passed to the
+            super class. Set the creative tab <code>CreativeTabs.tabBlock</code>, and set the
+            hardness to 40.0.</li>
+
+          <li> In your <code>BlocksModule</code> class, register the new
+            <code>CrystalGrowingBlock</code> with texture name <code>"crystal_growing_block"</code>,
+            using a new <code>CrystalGrowingBlock</code> instance with material
+            <code>Material.glass</code>, with display name "Crystal Growing Block".</li>
+
+          <li> Create a new class <code>CrystalGrowingItem</code> that extends <code>Item</code>.
+            The public constructor takes no parameters, and just sets the creative tab to
+            <code>CreativeTab.tabTools</code>.</li>
+
+          <li> In <code>ItemsModule.java</code>, add an entry for <code>CrystalGrowingItem</code>,
+            using texture name "crystal_growing_item", and display name "Crystal Growing Item".</li>
+
+          <li>Implement the <code>onItemUse(...)</code> method of the new
+            <code>CrystalGrowingItem</code> class. Here's the method signature:
+<codeBlock class="indented">
+public boolean onItemUse (
+    ItemStack item,                 // Items in the player's inventory
+    EntityPlayer player,
+    World world,
+    int x, int y, int z,            // Location of the block (can be air) the player clicked.
+    int side,                       // Cube face the player clicked
+    float px, float py, float pz    // Player's location in the world
+) </codeBlock>
+            <p> In this method, get the block at the item use location. If it's a
+            <code>CrystalGrowingBlock</code>, and if the block above is air, then pick a random
+            crystal height from 10 to 20 above the <code>CrystalGrowingBlock</code>. Replace the
+            blocks above the <code>CrystalGrowingBlock</code> with gold blocks, and replace the
+            original <code>CrystalGrowingBlock</code> with coal.</p>
+
+          </li>
+
+          <li> Always return <code>true</code> from the <code>onItemUse</code> function.</li>
+
+        </ol>
+
+      </div>
+
+      <h3>Part 2 &mdash; Quick Change to <code>BlocksModule</code> and <code>ItemsModule</code></h3>
+      <div class="indented">
+        <p> At this point, you have four custom block types (amethyst ore, battery block, checkered
+        block, and crystal growing block) and two custom item types (rock sifter and crystal growing
+        item). You can reference standard blocks like Blocks.coal_block or Blocks.air, but you
+        cannot easily reference our own custom blocks. To help make this easier, you're going to
+        <i>refactor</i> our code a bit. Code refactoring is the process of cleaning up, simplifying,
+        or otherwise improving existing code without changing any functionality. For this change,
+        you'll make it easier to reference our custom blocks and items.</p>
+
+        <ol>
+          <li> Open up ItemsModule.java in the editor. Add the following two declarations above the
+            <code>onLoad()</code> method:
+<codeBlock>
+public static final RockSifter          rockSifter         = new RockSifter();
+public static final CrystalGrowingItem  crystalGrowingItem = new CrystalGrowingItem();</codeBlock>
+          </li>
+
+          <li> <p>Now change the <code>onLoad()</code> method to use the new instance variables,
+            like so:</p>
+<codeBlock>public void onLoad() {
+  parentMod.itemRegistry.newInstance("rock_sifter",          rockSifter,         "Rock Sifter");
+  parentMod.itemRegistry.newInstance("crystal_growing_item", crystalGrowingItem, "Crystal Growing Item");
+}</codeBlock>
+          </li>
+
+          <li> Now you're going to do the same for the <code>BlocksModule</code> class, which you'll
+            find in src/tealsmc.mods/blocks. Use the same pattern as for the
+            <code>ItemsModule</code>, where you declare an instance variable for each block
+            instance, and refer to that instance variable in the <code>newInstance</code> call.</li>
+
+          <li> <p>At this point, you should be able to set a given world block to a
+            <code>BatteryBlock</code> like so:</p>
+              <codeBlock class="indented">world.setBlock(x,y,z, BlocksModule.batteryBlock);</codeBlock>
+          </li>
+        </ol>
+      </div>
+
+      <h3>Part 3 &mdash; Create an infection block</h3> <div class="indented">
+
+        <p> For part 3, you will create a block that spreads and infects neighboring blocks.<p>
+
+        <ol>
+          <li> For this new block, you'll need another new texture: <code>infected_block.png</code>.
+            Get this image file from your instructor, and add it to
+            <code>src/main/java/resources/assets.tealsmodloader.textures/blocks</code>. </li>
+
+          <li> Create a new block <code>InfectedBlock</code> that extends Block. Just like for
+            <code>CrystalGrowingBlock</code>, the <code>InfectedBlock</code> public constructor
+            takes a <code>Material</code> parameter and passes it to the super class. When constructing the
+			block object, set the material to <code>Material.glass</code>. The CreativeTab is 
+			<code>CreativeTabs.tabBlock</code>. For this block set the step sound
+            (see the <a href="#notes">notes</a> above) to <code>Block.soundTypeCloth</code>.</li>
+
+          <li> Now add the new <code>InfectedBlock</code> to the <code>BlocksModule</code> class,
+            using the new style of instance variables you converted to in part 2 of this lab. This
+            will come in handy below when you may want to set a neighboring block to another
+            infected block. The texture name for the infected block is "infected_block".</li>
+
+          <li> You want the infected block to infect other blocks at random intervals in time. To do
+            this, you will override the <code>randomDisplayTick()</code> method, which has the
+            following signature:
+<pre>
+public void randomDisplayTick(World world, int x, int y, int z, Random random)
+</pre>
+            <p> For our purposes, you'll only use the world, x, y and z parameters.</p>
+          </li>
+
+          <li> In the <code>randomDisplayTick()</code> method, select a random neighbor to the
+            block: up to one unit away in X, Y or Z, or any combination (that is, any one of the 26
+            neighboring blocks).</li>
+
+          <li> Don't infect air.</li>
+
+          <li> Only infect blocks with a hardness less than 10.</li>
+
+          <li> If you are ok to infect the neighboring block, change it to an
+            <code>InfectedBlock</code> using the <code>world.setBlock</code> method and our
+            <code>BlocksModule.infectedBlock</code> instance variable.</li>
+
+          <li> Fire up Minecraft and test out the infected block. You should see the infection
+            spread when you are in the area, and stop infecting once you're far enough away.</li>
+
+        </ol>
+      </div>
+
+    </div> <!-- tasks -->
+          
+  </div> <!-- content -->
+
+</div>
+
+<div id="footer">
+    <div class="prev"><a href="lab3.html">&#x25c0; Lab 3</a></div>
+    <div class="home"><a href="../units.html">Home</a></div>
+    <div class="next"><a href="lab5.html">Lab 5 &#x25b6;</a></div>
+</div>
+
+</body>
+</html>

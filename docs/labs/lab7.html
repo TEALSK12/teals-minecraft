@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- vim: set textwidth=100 shiftwidth=2 : -->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>TEALS Minecraft &ndash; Lab 7: Virus Robot</title>
+  <link rel="stylesheet" type="text/css" href="../style/site.css">
+</head>
+
+<body>
+
+  <h1 class="lab">Lab 7: Virus Robot</h1>
+  <div id="content">
+
+    <h2>Objective</h2>
+    <div class="indented">
+      <p>For lab 7, you will create an robot that wanders around the map and infects other entities
+      (that are not virus robots themselves). You will need to understand the basics of entity
+      navigation and the navigation system. You will also need an understanding of handling time
+      with <code>System.currentTimeMillis()</code>.</p>
+    </div>
+
+    <!-- ======================================================================================= -->
+    <h2 id="notes">Notes</h2>
+    <div class="indented">
+
+      <h4>To Register a New Task With a Specific Priority</h4>
+      <div class="indented">
+      <pre class="noSpaceBefore">
+tasks.addTask (priority, task)</pre>
+      </div>
+
+      <h4>To Get The Current System Time (in Milliseconds)</h4>
+      <div class="indented">
+        <pre class="noSpaceBefore">
+long milliseconds = System.currentTimeMillis()</pre>
+      </div>
+
+      <h4>Getting an Entity's Current Attack Target</h4>
+      <div class="indented">
+        <pre class="noSpaceBefore">
+Entity entity = ...
+Entity target = entity.getAttackTarget();
+</pre>
+
+        <p>If the entity has no current attack target, it will return <code>null</code>.</p>
+      </div>
+
+      <h4>Available Entity Properties</h4>
+      <div class='indented'>
+        <p class='noSpaceBefore'>
+          You will use the following entity properties throughout your code. </p>
+      <pre class="noSpaceBefore noSpaceAfter">
+boolean entity.isDead;         // True if the entity is dead
+double  entity.posX;           // X position of entity
+double  entity.posY;           // Y position of entity
+double  entity.posZ;           // Z position of entity
+float   entity.rotationPitch;  // Entity pitch (rotation up/down)
+float   entity.rotationYaw;    // Entity heading (direction)
+World   entity.worldObj;       // Entity's world</pre>
+      </div>
+
+      <h4>To Make a Robot Chase Another Entity "target"</h4>
+      <div class="indented">
+
+        <p class="noSpaceBefore noSpaceAfter">Use the following call:</p>
+        <div class="indented noSpaceBefore">
+<pre class="noSpaceBefore">robot.getNavigator().tryMoveToEntityLiving(target, speed);</pre>
+        </div>
+
+        <p class="noSpaceAfter">For speed, use one of:</p>
+        <ul class="compact noSpaceBefore">
+          <li><code>Robot.SPEED_FAST</code></li>
+          <li><code>Robot.SPEED_NORMAL</code></li>
+          <li><code>Robot.SPEED_SLOW</code></li>
+        </ol>
+      </div>
+
+      <h4>To Determine the Distance Between Two Entities</h4>
+      <div class="indented">
+<pre class="noSpaceBefore">float distanceInBlocks = entity1.getDistanceToEntity(entity2);</pre>
+      </div>
+
+      <h4>Setting an Entity's Position and Orientation</h4>
+      <div class="indented">
+        <pre class="noSpaceBefore">
+public void entity.setLocationAndAngles (
+    double posX, double posY, double posZ, float yaw, float pitch);</pre>
+      </div>
+
+      <h4>Spawning a New Entity in The World</h4>
+      <div class="indented">
+<pre class="noSpaceBefore">someExistingEntity.worldObj.spawnEntityInWorld(newEntity)</pre>
+      </div>
+
+      <h4>Setting an Entity's State to Dead</h4>
+      <div class="indented">
+<pre class="noSpaceBefore">public void entity.setDead();</pre>
+      </div>
+
+      <h4>To Spawn a Robot in Game While Playing</h4>
+      <ul class="noSpaceBefore">
+        <li>Type "<code>/robot <u>entity</u></code>", where <u>entity</u> is the name of the
+          registered robot.</li>
+        <li><em>For this lab, it would be </em>"<kbd>/robot virusbot</kbd>"</li>
+      </ul>
+
+    </div>
+
+    <!-- ======================================================================================= -->
+    <h2>Tasks</h2>
+    <div id="tasks" class="indented">
+
+      <h3>Part 1 &mdash; Create a virus robot that wanders around the world:
+        <code>VirusRobot</code> </h3>
+      <ol>
+        <li>Begin by creating a class called <code>VirusRobot</code> that extends the
+          <code>Robot</code> class. Implement a constructor that takes a
+          <code>net.minecraft.world.World</code> variable as a parameter, and call the super
+          constructor with this world parameter.</li>
+
+        <li>Inside the new constructor, add the <code>EntityAIWander</code> task with priority 1.
+          When you create the <code>EntityAIWander</code> task, pass in <code>SPEED_FAST</code>.
+          </li>
+
+        <li>Inside your <code>EntitiesModule</code> class, register the <code>VirusRobot</code>
+          as you did for the leafbot (lab 6). Use the "<code>red_robot</code>" texture, and name the
+          instance "<code>virusbot</code>".</li>
+      </ol>
+
+      <h3>Part 2 &mdash; Create a task to infect other entities: <code>EntityAIInfect</code></h3>
+      <ol>
+        <li> In the entities folder, create a new class called <code>EntityAIInfect</code>. This
+        class extends <code>net.minecraft.entity.ai.EntityAIBase</code>. You will probably find it
+        helpful to refer to the EntityAIConvertLeaves.java file that you wrote for lab 6, since the
+        basic code structure is similar. </li>
+
+        <li> Create an <code>EntityAIInfect</code> constructor that takes a <code>VirusRobot</code>
+          instance. As you did for the AIConvertLeaves task, this constructor will just store
+          the entity passed in the constructor in a private field. Call it '<code>virusbot</code>'.
+          </li>
+
+        <li> Create a private <code>EntityAIInfect</code> field of type
+          <code>EntityLivingBase</code> called <code>target</code>. We will use this field to store
+          the current target entity that the robot will try to infect. </li>
+
+        <li> The <code>EntityAIInfect</code> class must implement the following methods:
+          <ul class="compact">
+            <li><code>boolean shouldExecute()</code></li>
+            <li><code>void startExecuting()</code></li>
+            <li><code>boolean continueExecuting()</code></li>
+            <li><code>void updateTask()</code></li>
+          </ul>
+        </li>
+
+        <li><code>public boolean shouldExecute()</code> &mdash; The <code>shouldExecute()</code>
+          method returns true if the virus robot has a current attack target. See the <a
+          href="#notes">notes</a> above on getting the current attack target. </li>
+
+        <li><code>public void startExecuting()</code> &mdash; This method is called if
+          <code>shouldExecute()</code> returned true, so we know we have a current attack target.
+          All you need to do in this method is store the attack target in our private field. Note
+          that you never have to worry about checking to see if the target entity is another
+          <code>VirusRobot</code>, since entities do not attack their own kind. </li>
+
+        <li><code>public boolean continueExecuting()</code> &mdash; This method is called after one
+          execution of the <code>updateTask()</code> method. It must return false when the task has
+          completed or should otherwise stop. For this task (chasing after another entity to
+          infect), there are two conditions which should stop it:
+          <ul class="compact">
+            <li>there is no current target, or</li>
+            <li>the target is dead.</li>
+          </ul>
+          <p>See the <a href="#notes">notes</a> above for determining the current target and
+          determining whether an entity is dead.</p>
+          </li>
+
+        <li><p><code>public void updateTask()</code> &mdash; this method implements the core behavior
+          of the <code>EntityAIInfect</code> task. In broad terms, it moves (or tries to move)
+          the virus robot closer to the target entity. If the target is close enough, it infects the
+          entity and converts it to a new <code>VirusRobot</code>.</p>
+
+          <p>This task should be implemented in the following steps. You will be using a lot of the
+            information outlined in the <a href="notes">notes</a> above, so if you're stuck, the
+            answer's probably there.</p>
+
+          <ol style="list-style-type:lower-latin">
+            <li> First, you need to ensure that the target is not dead. If the target <em>is</em>
+              dead, then do nothing and skip the remaining steps. </li>
+
+            <li> Chase after the target with a fast speed. </li>
+
+            <li> If the virus robot is more two blocks or further away from the target, then there's
+              nothing else to do this iteration, so skip the remaining steps. </li>
+
+            <li> At this point, we've determined that the target is alive and within infection
+              range. Now it's time to create a new virus robot to replace the target entity. To do
+              this, create a new <code>VirusRobot</code>. The constructor takes a World object, so
+              just pass along this robot's world. You can get an entity's world object from its
+              public <code>worldObj</code> field.</li>
+
+            <li> <p> Set the new virus robot at the same location as the target. Set the new yaw and
+              pitch angles to zero.</p>
+              <p> <em>Note:</em> The one catch is that you much place the new VirusRobot one
+              position <em>above</em> the target's position (that is, Y + 1), or it will fall below
+              the world. </p>
+              </li>
+
+            <li> Spawn the new entity in the world. </li>
+
+            <li> Set the target entity's state to dead. </li>
+
+          </ol>
+
+        </li>
+
+        <li>In the <code>VirusRobot</code> class, register the <code>EntityAIInfect</code> task
+          with priority 2.</li>
+      </ol>
+      
+      <h3>Part 3 &mdash; Implement VirusRobot Expiration</h3>
+
+      <p> If we let virus robots continue, they'll soon infect the entire world. In order to balance
+      things out, let's give them a limited lifetime to infect other entities.</p>
+
+      <ol>
+        <li>In the <code>VirusRobot</code> class, implement a new <code>onUpdate()</code> method and
+          call <code>super.onUpdate()</code> as the first statement. This method will be called
+          every world tick.</li>
+
+        <li> As you saw in the notes above, you can use <code>System.currentTimeMillis()</code> to
+          query the current time. Let's use that to calculate an expiration time for each virus
+          robot. Create a class constant (<code>public static final long</code>) called
+          <code>lifetime</code> and set it to 20 seconds (<em>in milliseconds</em>). </li>
+
+        <li> Now create a public long value named <code>expirationTime</code>. In the virus robot
+          constructor, set it to the expiration time of the robot, using the current time and the
+          <code>lifetime</code> values (both in milliseconds). </li>
+
+        <li> Now, in the <code>VirusRobot.onUpdate()</code> method, check to see if the current time
+          is past the robot's expiration time. If so, expire the robot by giving it damage equal to
+          its total health, like so:
+          <pre class="indented">damageEntity(new DamageSource("Died from old age"), getHealth());</pre>
+          </li>
+
+        <li> Retry the game, and make sure that virus robots expire after 20 seconds. </li>
+      </ol>
+
+      <h3>Part 4 (Optional) &mdash; Implment VirusRobot Rejuvenation</h3>
+
+      <p> Update <code>VirusRobot</code> with rejuvenation powers. After infecting another entity,
+      reset <code>VirusRobot</code>'s expiration time. How would you design the code to do this?
+      HINT: The expiration timer reset method should be called from two places in the code. </p>
+
+    </div> <!-- #tasks -->
+
+  </div> <!-- #content -->
+
+  <div id="footer">
+    <div class="prev"><a href="lab6.html">&#x25c0; Lab 6</a></div>
+    <div class="home"><a href="../units.html">Home</a></div>
+    <div class="next"><a href="lab8.html">Lab 8 &#x25b6;</a></div>
+  </div>
+</body>
+</html>
