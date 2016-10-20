@@ -1,199 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
 <!-- vim: set textwidth=100 shiftwidth=2 : -->
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>TEALS Minecraft &ndash; Lab 6: Leaf Converter Robot</title>
-  <link rel="stylesheet" type="text/css" href="../style/site.css">
-</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>TEALS Minecraft &ndash; Lab 6: Leaf Converter Robot</title>
+<link rel="stylesheet" href="../style/site.css">
 
-<body>
 
-  <h1 class="lab">Lab 6: Leaf Converter Robot</h1>
-  <div id="content">
 
-    <h2>Objective</h2>
+<h1 class="lab">Lab 6: Leaf Converter Robot</h1>
+<div id="content">
+
+  <h2>Objective</h2>
+  <div class="indented">
+    <p>For lab 6, you will create an <code>Entity</code> that wanders around the map, and converts
+    blocks around it into leaves. You will need a basic understanding of how the
+    <code>EntityAIBase</code> class and task registration works.
+  </div>
+
+  <h2 id="notes">Notes</h2>
+  <div class="indented">
+
+    <h4>To add a new task with a specific priority</h4>
     <div class="indented">
-      <p>For lab 6, you will create an <code>Entity</code> that wanders around the map, and converts
-      blocks around it into leaves. You will need a basic understanding of how the
-      <code>EntityAIBase</code> class and task registration works.</p>
+      <code>tasks.addTask (priority, task).</code>
     </div>
 
-    <h2 id="notes">Notes</h2>
-    <div class="indented">
+    <h4>Getting a reference to the world object</h4>
+    <div class='indented'>
+      Use the <code>worldObj</code> field from your <code>Robot</code>.
+    </div>
 
-      <h4>To add a new task with a specific priority</h4>
-      <div class="indented">
-        <code>tasks.addTask (priority, task).</code>
-      </div>
-
-      <h4>Getting a reference to the world object</h4>
-      <div class='indented'>
-        Use the <code>worldObj</code> field from your <code>Robot</code>.
-      </div>
-
-      <h4>Getting &amp; setting the block at a given location in the world</h4>
-      <div class='indented'>
+    <h4>Getting &amp; setting the block at a given location in the world</h4>
+    <div class='indented'>
 <codeBlock>Block World.getBlock (int x, int y, int z);
 void  World.setBlock (int x, int y, int z, Block block);</codeBlock>
-      </div>
+    </div>
 
-      <h4>To spawn a robot in game</h4>
-      <ul class="noSpaceBefore">
-        <li>While in the world, type "<kbd>/robot <i>entity</i></kbd>", where
-          <code><i>entity</i></code> is the name of the registered robot you wish to summon.</li>
-        <li><em>For this lab, the command would be</em> "<code>/robot leafbot</code>".</li>
-      </ul>
+    <h4>To spawn a robot in game</h4>
+    <ul class="noSpaceBefore">
+      <li>While in the world, type "<kbd>/robot <i>entity</i></kbd>", where
+        <code><i>entity</i></code> is the name of the registered robot you wish to summon.
+      <li><em>For this lab, the command would be</em> "<code>/robot leafbot</code>".
+    </ul>
+
+  </div>
+
+  <h2>Tasks</h2>
+  <div id="tasks" class="indented">
+
+    <h3>Part 1 &mdash; Construct a Simple Wandering LeafBot</h3>
+    <div class="indented">
+      <p>Our first entity will be a simple robot that randomly wanders around the world. We will
+      add more complex behavior later in part 3.
+
+      <ol>
+        <li>In </kbd>src/main/java/tealsmc/mods/entities</kbd>, find the file LeafBot.java.
+
+        <li>Open the <code>LeafBot</code> constructor. In the template, you'll see that we've
+        already added the constructor call for the superclass (<code>Robot</code>), where we pass
+        the <code>World</code> parameter.
+
+        <li>In the constructor, after the call to the superclass, create a new
+        <code>EntityAIWander</code> object, passing a <code>this</code> reference to this new
+        Entity, and a speed value of <code>SPEED_NORMAL</code>. This AI task will cause our robot
+        to randomly wander around the world at a normal pace.
+
+        <li>Add the <code>EntityAIWander</code> task that you just created with a priority of 1.
+        See the <a href="#notes">notes</a> section above for the way to do this.
+      </ol>
+    </div>
+
+    <h3>Part 2 &mdash; Register and Try Out the New LeafBot</h3>
+    <div class="indented">
+      <p>In prior labs you used the <code>ItemsModule</code> class to register new <em>items</em>
+      we've created (like <code>RockSifter</code> and <code>CrystalGrowingItem</code>), and you
+      used the <code>BlocksModule</code> class to register <em>blocks</em> that we've created
+      (like <code>CheckeredBlock</code> and <code>TreeConeBlock</code>).
+
+      <p>Now that you're going to start creating <em>entities</em>, you will register new entities
+      in the <code>EntitiesModule</code>.
+
+      <ol>
+        <li>
+          <p>You need to register the new <code>LeafBot</code> you created. Find the
+          EntitiesModule.java source in <code>src/main/java/tealsmc/mods/entities</code>. Add
+          the following line to the <code>onLoad()</code> method:
+
+          <div style="margin-left:2ex;">
+<pre>parentMod.entityRegistry.newInstance ("leafbot", LeafBot.class, "blue_robot");</pre>
+          </div>
+
+          <p>Note that registration for entities is a bit different than for items and blocks. In
+          particular, we register an entity <em>class</em> (<code>WanderingRobot.class</code>)
+          rather than an entity instance.
+
+          <p><code>"blue_robot"</code> is the entity texture. You can choose any of the following
+          colors:
+          <ul class="compact" style="margin-top:1em; list-style-type:disc">
+            <li>"red_robot"
+            <li>"green_robot"
+            <li>"blue_robot"
+            <li>"gold_robot"
+            <li>"gray_robot"
+            <li>"rainbow_robot"
+          </ul>
+
+        <li>Let's run the Minecraft client and summon a few leafbots. From the registration line
+        above, you'll see that we named these entities "<kbd>leafbot</kbd>". See the
+        <a href="#notes">notes</a> section above for a reminder of how to summon entities in game.
+        Note that robots only move once in a while, so create six or so leafbots so you don't have
+        to wait a long time to see one move. After you've done that, you can experiment with
+        different colors or movement speeds for your leafbot if you wish.
+      </ol>
 
     </div>
 
-    <h2>Tasks</h2>
-    <div id="tasks" class="indented">
+    <h3>Part 3 &mdash; Create a Leaf Conversion Task</h3>
+    <div class="indented">
+      <p>Now that your leafbot can wander around the map, let's update it to do something more
+      interesting.
 
-      <h3>Part 1 &mdash; Construct a Simple Wandering LeafBot</h3>
-      <div class="indented">
-        <p>Our first entity will be a simple robot that randomly wanders around the world. We will
-        add more complex behavior later in part 3.</p>
+      <ol>
+        <li>In the entities directory, create a new class called
+        <code>EntityAIConvertLeaves</code> that extends <code>EntityAIBase</code> (from
+        <code>net.minecraft.entity.ai</code>).
 
-        <ol>
-          <li>In </kbd>src/main/java/tealsmc/mods/entities</kbd>, find the file LeafBot.java.</li>
+        <li>Implement the constructor. The constructor will take a <code>Robot</code> reference
+        and store it in a private field in the class.
 
-          <li>Open the <code>LeafBot</code> constructor. In the template, you'll see that we've
-          already added the constructor call for the superclass (<code>Robot</code>), where we pass
-          the <code>World</code> parameter.</li>
+        <li>Start by stubbing out the required methods for <code>EntityAIBase</code>. These are
+          <ul class="compact">
+            <li><code>public boolean shouldExecute()</code>,
+            <li><code>public void startExecuting()</code>, and
+            <li><code>public boolean continueExecuting()</code>
+          </ul>
+          <p>Return <code>false</code> from <code>shouldExecute()</code> and
+          <code>continueExecuting</code> for now. At this point, you shouldn't see any more
+          warnings about <code>EntityAIConvertLeaves</code> methods that need to be
+          implemented.
 
-          <li>In the constructor, after the call to the superclass, create a new
-          <code>EntityAIWander</code> object, passing a <code>this</code> reference to this new
-          Entity, and a speed value of <code>SPEED_NORMAL</code>. This AI task will cause our robot
-          to randomly wander around the world at a normal pace.</li>
+        <li>
+          <p>Time to implement the <code>public boolean shouldExecute()</code> method. This task
+          should have a 5% probability of running each time it's queried. In order to do this, you
+          need to have a random number generator in your class that you can use to generate random
+          values. Use the <code>Random</code> class from <code>java.util.Random</code> in the
+          following steps:
 
-          <li>Add the <code>EntityAIWander</code> task that you just created with a priority of 1.
-          See the <a href="#notes">notes</a> section above for the way to do this.</li>
-        </ol>
-      </div>
+          <ol>
+            <li>Add a field of type <code>Random</code> to your <code>EntityAIConvertLeaves</code>
+            named <code>random</code>, and initialize it to a new instance.
 
-      <h3>Part 2 &mdash; Register and Try Out the New LeafBot</h3>
-      <div class="indented">
-        <p>In prior labs you used the <code>ItemsModule</code> class to register new <em>items</em>
-        we've created (like <code>RockSifter</code> and <code>CrystalGrowingItem</code>), and you
-        used the <code>BlocksModule</code> class to register <em>blocks</em> that we've created
-        (like <code>CheckeredBlock</code> and <code>TreeConeBlock</code>).</p>
+            <li>Use <code>random.nextDouble()</code> to determine if <code>shouldExecute()</code>
+            should return <code>true</code> (run the task) for a given call. Recall the
+            <code>nextDouble()</code> function returns a <code>double</code> value in the range of
+            0&ndash;1, not including 1. Figure out how to return <code>true</code> with 5%
+            probability.
+          </ol>
 
-        <p>Now that you're going to start creating <em>entities</em>, you will register new entities
-        in the <code>EntitiesModule</code>.</p>
+        <li>Implement the <code>public boolean continueExecuting()</code> method. This method
+        indicates whether the task should continue executing after the current update. For the
+        leaf conversion robot, we will only convert one leaf at a time, so return
+        <code>false</code> to indicate that we don't require another task execution.
 
-        <ol>
-          <li>
-            <p>You need to register the new <code>LeafBot</code> you created. Find the
-            EntitiesModule.java source in <code>src/main/java/tealsmc/mods/entities</code>.</p> Add
-            the following line to the <code>onLoad()</code> method:</p>
+        <li>Implement the <code>public void startExecuting()</code> method. In this method, you'll
+        need to create the following code:
+          <ol class="compact" style="margin-top:1em; list-style-type:upper-latin">
+            <li>Find a random X, Y, Z location within 2 block's length of the
+              <code>WanderingEntities</code> location. Again, use your <code>random</code> field
+              to generate random values.
+            <li>Examine the block at that location and make sure it's convertible (not air or
+              leaves).
+            <li>If the block at the chosen location <em>is</em> convertible, then change its
+              material to leaves (<code>Blocks.leaves</code>).
+          </ol>
 
-            <div style="margin-left:2ex;">
-<pre>parentMod.entityRegistry.newInstance ("leafbot", LeafBot.class, "blue_robot");</pre>
-            </div>
+        <li>Now that we've finished with the leaf conversion task, go back to the LeafBot class
+        and add a new task of priority 2 of <code>EntityAIConvertLeaves</code>.
 
-            <p>Note that registration for entities is a bit different than for items and blocks. In
-            particular, we register an entity <em>class</em> (<code>WanderingRobot.class</code>)
-            rather than an entity instance.</p>
+        <li>Run the game again and test out your new LeafBot.
+      </ol>
 
-            <p><code>"blue_robot"</code> is the entity texture. You can choose any of the following
-            colors:</p>
-            <ul class="compact" style="margin-top:1em; list-style-type:disc">
-              <li>"red_robot"</li>
-              <li>"green_robot"</li>
-              <li>"blue_robot"</li>
-              <li>"gold_robot"</li>
-              <li>"gray_robot"</li>
-              <li>"rainbow_robot"</li>
-            </ul>
-          </li>
+    </div>
 
-          <li>Let's run the Minecraft client and summon a few leafbots. From the registration line
-          above, you'll see that we named these entities "<kbd>leafbot</kbd>". See the
-          <a href="#notes">notes</a> section above for a reminder of how to summon entities in game.
-          Note that robots only move once in a while, so create six or so leafbots so you don't have
-          to wait a long time to see one move. After you've done that, you can experiment with
-          different colors or movement speeds for your leafbot if you wish.</li>
-        </ol>
+  </div> <!-- #tasks -->
 
-      </div>
+</div> <!-- #content -->
 
-      <h3>Part 3 &mdash; Create a Leaf Conversion Task</h3>
-      <div class="indented">
-        <p>Now that your leafbot can wander around the map, let's update it to do something more
-        interesting.</p>
 
-        <ol>
-          <li>In the entities directory, create a new class called
-          <code>EntityAIConvertLeaves</code> that extends <code>EntityAIBase</code> (from
-          <code>net.minecraft.entity.ai</code>).</li>
-
-          <li>Implement the constructor. The constructor will take a <code>Robot</code> reference
-          and store it in a private field in the class.</li>
-
-          <li>Start by stubbing out the required methods for <code>EntityAIBase</code>. These are
-            <ul class="compact">
-              <li><code>public boolean shouldExecute()</code>,</li>
-              <li><code>public void startExecuting()</code>, and</li>
-              <li><code>public boolean continueExecuting()</code></li>
-            </ul>
-            <p>Return <code>false</code> from <code>shouldExecute()</code> and
-            <code>continueExecuting</code> for now. At this point, you shouldn't see any more
-            warnings about <code>EntityAIConvertLeaves</code> methods that need to be
-            implemented.</p>
-          </li>
-
-          <li>
-            <p>Time to implement the <code>public boolean shouldExecute()</code> method. This task
-            should have a 5% probability of running each time it's queried. In order to do this, you
-            need to have a random number generator in your class that you can use to generate random
-            values. Use the <code>Random</code> class from <code>java.util.Random</code> in the
-            following steps:</p>
-
-            <ol>
-              <li>Add a field of type <code>Random</code> to your <code>EntityAIConvertLeaves</code>
-              named <code>random</code>, and initialize it to a new instance.</li>
-
-              <li>Use <code>random.nextDouble()</code> to determine if <code>shouldExecute()</code>
-              should return <code>true</code> (run the task) for a given call. Recall the
-              <code>nextDouble()</code> function returns a <code>double</code> value in the range of
-              0&ndash;1, not including 1. Figure out how to return <code>true</code> with 5%
-              probability.</li>
-            </ol>
-          </li>
-
-          <li>Implement the <code>public boolean continueExecuting()</code> method. This method
-          indicates whether the task should continue executing after the current update. For the
-          leaf conversion robot, we will only convert one leaf at a time, so return
-          <code>false</code> to indicate that we don't require another task execution.</li>
-
-          <li>Implement the <code>public void startExecuting()</code> method. In this method, you'll
-          need to create the following code:
-            <ol class="compact" style="margin-top:1em; list-style-type:upper-latin">
-              <li>Find a random X, Y, Z location within 2 block's length of the
-                <code>WanderingEntities</code> location. Again, use your <code>random</code> field
-                to generate random values.</li>
-              <li>Examine the block at that location and make sure it's convertible (not air or
-                leaves).</li>
-              <li>If the block at the chosen location <em>is</em> convertible, then change its
-                material to leaves (<code>Blocks.leaves</code>).</li>
-            </ol>
-          </li>
-
-          <li>Now that we've finished with the leaf conversion task, go back to the LeafBot class
-          and add a new task of priority 2 of <code>EntityAIConvertLeaves</code>.</li> 
-
-          <li>Run the game again and test out your new LeafBot.</li>
-        </ol>
-      </div>
-    </div> <!-- #tasks -->
-  </div> <!-- #content -->
-
-  <div id="footer">
-    <div class="prev"><a href="lab5.html">&#x25c0; Lab 5</a></div>
-    <div class="home"><a href="../units.html">Home</a></div>
-    <div class="next"><a href="lab7.html">Lab 7 &#x25b6;</a></div>
-  </div>
-</body>
-</html>
+<div id="footer">
+  <div class="prev"><a href="lab5.html">&#x25c0; Lab 5</a></div>
+  <div class="home"><a href="../units.html">Home</a></div>
+  <div class="next"><a href="lab7.html">Lab 7 &#x25b6;</a></div>
+</div>
