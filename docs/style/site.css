@@ -20,7 +20,7 @@ a:hover {
 }
 
 body {
-  font-family: corbel, arial, helvetica, sans serif;
+  font-family: calibri, arial, helvetica, sans serif;
   color: #ffffff;
   background-color: #606060;
   margin: 0;
@@ -171,20 +171,24 @@ table.toc td.unit {
 }
 
 code {
+  font-family: consolas, monaco, monospace;
   color: #ffeeaa;
+  font-size: 75%;
 }
 
 pre {
+  font-family: consolas, monaco, monospace;
   color: #ffeeaa;
-  font-size: 90%;
+  font-size: 75%;
 }
+
 
 codeBlock {
   display: block;
   white-space: pre;
-  font-family: monospace;
+  font-family: consolas, monaco, monospace;
   color: #ffeeaa;
-  font-size: 90%;
+  font-size: 75%;
 }
 
 /*  S P E C I A L   T A G S  */

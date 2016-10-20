@@ -51,7 +51,7 @@
     </div>
 
   </div>
-      
+
   <h2>Tasks</h2>
   <div class="indented">
 
@@ -83,13 +83,13 @@
           <code>CrystalGrowingItem</code> class. Here's the method signature:
 <codeBlock class="indented">
 public boolean onItemUse (
-  ItemStack item,                 // Items in the player's inventory
+  ItemStack item,               // Items in the player's inventory
   EntityPlayer player,
   World world,
-  int x, int y, int z,            // Location of the block (can be air) the player clicked.
-  int side,                       // Cube face the player clicked
-  float px, float py, float pz    // Player's location in the world
-) </codeBlock>
+  int x, int y, int z,          // Location of block (can be air) the player clicked
+  int side,                     // Cube face the player clicked
+  float px, float py, float pz  // Player's location in the world
+)</codeBlock>
           <p> In this method, get the block at the item use location. If it's a
           <code>CrystalGrowingBlock</code>, and if the block above is air, then pick a random
           crystal height from 10 to 20 above the <code>CrystalGrowingBlock</code>. Replace the
@@ -115,15 +115,17 @@ public boolean onItemUse (
       <ol>
         <li> Open up ItemsModule.java in the editor. Add the following two declarations above the
           <code>onLoad()</code> method:
-<codeBlock>
+<codeBlock class="indented">
 public static final RockSifter          rockSifter         = new RockSifter();
 public static final CrystalGrowingItem  crystalGrowingItem = new CrystalGrowingItem();</codeBlock>
 
         <li> <p>Now change the <code>onLoad()</code> method to use the new instance variables,
           like so:
-<codeBlock>public void onLoad() {
-parentMod.itemRegistry.newInstance("rock_sifter",          rockSifter,         "Rock Sifter");
-parentMod.itemRegistry.newInstance("crystal_growing_item", crystalGrowingItem, "Crystal Growing Item");
+<codeBlock class="indented">public void onLoad() {
+    parentMod.itemRegistry.newInstance (
+        "rock_sifter",          rockSifter,         "Rock Sifter");
+    parentMod.itemRegistry.newInstance(
+        "crystal_growing_item", crystalGrowingItem, "Crystal Growing Item");
 }</codeBlock>
 
         <li> Now you're going to do the same for the <code>BlocksModule</code> class, which you'll
@@ -162,9 +164,9 @@ parentMod.itemRegistry.newInstance("crystal_growing_item", crystalGrowingItem, "
         <li> You want the infected block to infect other blocks at random intervals in time. To do
           this, you will override the <code>randomDisplayTick()</code> method, which has the
           following signature:
-<pre>
+<codeBlock class="indented">
 public void randomDisplayTick(World world, int x, int y, int z, Random random)
-</pre>
+</codeBlock>
           <p> For our purposes, you'll only use the world, x, y and z parameters.
 
         <li> In the <code>randomDisplayTick()</code> method, select a random neighbor to the
