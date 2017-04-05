@@ -83,14 +83,14 @@ list of options. The more important targets are:
 Releasing
 ---------
 1. Ensure that `version.txt` contains the current release number. This project uses
- [semantic versioning](http://semver.org/). Semantic versioning uses three values:
- MAJOR.MINOR.PATCH.
- - Increment the PATCH number if you're making a bug fix that is backwards compatible with the prior
-   release.
- - Increment the MINOR number (and reset PATCH to zero) if you're adding functionality that is
-   backwards compatible with the prior release.
- - Increment the MAJOR number (and reset MINOR and PATCH values to zero) if a release is somehow
-   backwards incompatible with the prior release.
+   [semantic versioning](http://semver.org/). Semantic versioning uses three values:
+   MAJOR.MINOR.PATCH.
+   - Increment the PATCH number if you're making a bug fix that is backwards compatible with the prior
+     release.
+   - Increment the MINOR number (and reset PATCH to zero) if you're adding functionality that is
+     backwards compatible with the prior release.
+   - Increment the MAJOR number (and reset MINOR and PATCH values to zero) if a release is somehow
+     backwards incompatible with the prior release.
 
 2. Verify that `CHANGELOG.md` contains a good description of the changes for this release.
 
