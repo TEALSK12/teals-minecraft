@@ -99,27 +99,27 @@ Releasing
 4. Review `build/README-Distrib.txt` for content and make any necessary changes.
 
 5. Build the new releases using `make all` from the root of the project. This will create the
-  release Zip files in the `out/` directory.
+   release Zip files in the `out/` directory.
 
 6. Create a release tag at the current release point:
 
-  ``` cmd
-  > git tag -a vX.Y.Z
-  ```
-
-  This will create the tag `vX.Y.Z` at the current HEAD commit. In the editor, add all of the
-  relevant changelog items from `CHANGELOG.md`. When done, push the new release tag up to GitHub:
-
-  ``` cmd
-  > git push origin vX.Y.Z
-  ```
+   ```
+   > git tag -a vX.Y.Z
+   ```
+    
+   This will create the tag `vX.Y.Z` at the current HEAD commit. In the editor, add all of the
+   relevant changelog items from `CHANGELOG.md`. When done, push the new release tag up to GitHub:
+    
+   ```
+   > git push origin vX.Y.Z
+   ```
 
 7. Now go to the
-  [`teals-minecraft` release page](https://github.com/TEALSK12/teals-minecraft/releases) and hit
-  the "Draft a new release" button. Enter the new release tag, ensure that the target branch is
-  `master`, enter the title (for example, "v1.1.0"). Finally add the changelog items in the
-  description. After this, drag the release archives (`tealsmc-X.Y.Z-eclipse.zip` and
-  `tealsmc-X.Y.Z-intellij.zip`) to the upload area. Finally, hit the "Publish release" button.
+   [`teals-minecraft` release page](https://github.com/TEALSK12/teals-minecraft/releases) and hit
+   the "Draft a new release" button. Enter the new release tag, ensure that the target branch is
+   `master`, enter the title (for example, "v1.1.0"). Finally add the changelog items in the
+   description. After this, drag the release archives (`tealsmc-X.Y.Z-eclipse.zip` and
+   `tealsmc-X.Y.Z-intellij.zip`) to the upload area. Finally, hit the "Publish release" button.
 
 8. Bump the version in the `version.txt` file in the project root.
 
