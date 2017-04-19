@@ -12,7 +12,6 @@ This project is targeted for development on Windows. In addition to a standard W
 
 - Java 1.6+
 - Either Eclipse or IntelliJ IDEA. Other IDE's may work; if so, please augment and document.
-- The 7-zip archiver (7z.exe). This should be on your executable path somewhere.
 
 
 Clone Setup
