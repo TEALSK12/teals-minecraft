@@ -36,13 +36,12 @@ IntelliJ IDEA
 Lessons and Labs
 ----------------
     You can find the TEALS Minecraft lessons and labs on the project web site at
-    http://tealsk12.github.io/tealsMC/ (case sensitive).
+    https://tealsk12.github.io/teals-minecraft/.
 
 
 Help & Assistance
 -----------------
-    We have a project wiki
-    <https://github.com/TEALSK12/public-apcs/wiki/TEALS-Minecraft-Project>
+    We have a project wiki at <https://github.com/TEALSK12/teals-minecraft/wiki>
     everyone can use and edit to share out information. Please add whatever
     information you feel may help your fellow students and instructors!
 
