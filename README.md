@@ -4,6 +4,10 @@ Teals Minecraft Project
 This is the TEALS repo for the development of the Minecraft projects and associated curriculum.
 The main project web site is at https://tealsk12.github.io/teals-minecraft.
 
+**NOTE**: _All information below is for **developers** of the TEALS Minecraft project. To **use**
+the Minecraft project (if you are an instructor or student), then [download the latest release] and
+follow the instructions in top-level README file._
+
 
 Prerequisites
 -------------
@@ -129,3 +133,6 @@ Releasing
 See the [TEALS Minecraft wiki](https://github.com/TEALSK12/tealsMC/wiki) for more project
 information, or contact [Connor Hollasch](mailto:connor@hollasch.net) or
 [Steve Hollasch](steve@hollasch.net).
+
+
+[download the latest release]: https://github.com/TEALSK12/teals-minecraft/releases/
