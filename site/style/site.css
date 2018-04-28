@@ -45,6 +45,10 @@ div#navbar a {
     color: white;
 }
 
+div#navbar a.active {
+    background: #7c9926;
+}
+
 div#content {
     margin: 2em 8% 0 8%;
     max-width: 40em;
@@ -139,6 +143,11 @@ ol.capitals {
 
 ol li {
     margin-bottom: 0.5em;
+}
+
+ul {
+    font-size: 125%;
+    line-height: 1.4em;
 }
 
 ul.noBullet li {
