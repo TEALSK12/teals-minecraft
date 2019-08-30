@@ -57,7 +57,3 @@ Help & Assistance
 We have a project wiki at <https://github.com/TEALSK12/teals-minecraft/wiki>
 everyone can use and edit to share out information. Please add whatever
 information you feel may help your fellow students and instructors!
-
-
-If you have any questions, please contact Connor Hollasch <connor@hollasch.net>
-or Steve Hollasch <steve@hollasch.net>.

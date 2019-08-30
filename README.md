@@ -109,10 +109,10 @@ Releasing
    ```
    > git tag -a vX.Y.Z
    ```
-    
+
    This will create the tag `vX.Y.Z` at the current HEAD commit. In the editor, add all of the
    relevant changelog items from `CHANGELOG.md`. When done, push the new release tag up to GitHub:
-    
+
    ```
    > git push origin vX.Y.Z
    ```
@@ -131,8 +131,7 @@ Releasing
 
 ----
 See the [TEALS Minecraft wiki](https://github.com/TEALSK12/tealsMC/wiki) for more project
-information, or contact [Connor Hollasch](mailto:connor@hollasch.net) or
-[Steve Hollasch](steve@hollasch.net).
+information.
 
 
 [download the latest release]: https://github.com/TEALSK12/teals-minecraft/releases/
