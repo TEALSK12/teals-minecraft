@@ -58,7 +58,7 @@ public class GradleStart extends GradleStartCommon {
       protected void setDefaultArguments(Map<String, String> argumentMap) {
             argumentMap.put("version", "1.7.10");
             argumentMap.put("assetIndex", "1.7.10");
-            argumentMap.put("assetsDir", new File("").getAbsolutePath() + FILE_SEPERATOR + "lib" + FILE_SEPERATOR + "gradle" + FILE_SEPERATOR + "assets");
+            argumentMap.put("assestsDir", new File("").getAbsolutePath() + FILE_SEPERATOR + "Minecraft" + FILE_SEPERATOR + "production" + FILE_SEPERATOR + "lib" + FILE_SEPERATOR + "gradle" + FILE_SEPERATOR + "assests");
             argumentMap.put("accessToken", "FML");
             argumentMap.put("userProperties", "{}");
             argumentMap.put("username", null);
