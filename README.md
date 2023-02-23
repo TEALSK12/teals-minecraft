@@ -127,6 +127,42 @@ Releasing
 8. Bump the version in the `version.txt` file in the project root.
 
 9. Start a new release section in `CHANGELOG.md`.
+----
+
+Error Handling
+--------------
+If using eclipse, some errors have been found with Spring Boot and the java version you are using. In mu experience, Java 8 works best.
+If you get the following error, follow the instructions below.
+
+```
+Exception in thread "main" java.lang.ClassCastException: java.base/jdk.internal.loader.ClassLoaders$AppClassLoader cannot be cast to java.base/java.net.URLClassLoader
+ ```
+
+1. Download java 8 (If you don't have) then install it
+
+2. I am not sure if you have to do it or not but just do it. I create JAVA_HOME path by right click to my desktop -> properties -> Advanced System Setting -> Advanced Tab -> Environment Variables -> Add JAVA_HOME in both User Variables and System Variables -> Click new -> Variable Home is "JAVA_HOME", Variable Value can be left empty -> Browse Directory -> point to your jdk folder (Exmaple: mine is C:\Program Files\Java\jdk1.8.0_291)
+
+3. Go to eclipse -> go to window tab -> choose java on the menu on the left side -> Installed JREs -> in default eclipse already had jre directory -> click to it and then click duplicate -> change the directory to your own jre directory (example: C:\Program Files\Java\jre1.8.0_291)
+
+4. Back to java menu, choose compiler option -> then on the right side -> change compiler compliance level to 1.8.
+
+
+
+LWJGL errors also appear to happen with some eclipse versions, so if you get the below error, follow the instructions below.
+
+ ``` 
+  Exception in thread "main" java.lang.UnsatisfiedLinkError: no lwjgl in java.library.path
+ ```
+
+1. Go to your LWJGL folder that contains the folders named "jar", "res", "doc", and "native". You need to go into Eclipse (assuming you use eclipse), open your project in the Project Explorer on the left side of your screen.
+
+2. Right click on the "JRE System Library" of your project, and click "Build Path" -> "Configure Build Path".
+
+3. Include the LWJGL native libraries to your project in the Build Path Configurer by clicking the "Native library location" which can be seen in the JRE System Library dropdown menu.
+
+4. Click on "Edit...", which will be the only button clickable in that general area.
+
+5. A file explorer will pop up. Navigate to the location of your LWJGL native folder (The location should be something like  "TealsMC-Eclipse/Minecraft/production/lib/gradle/natives" if you are using Windows) and include the folder named [Your OS here].
 
 
 ----
