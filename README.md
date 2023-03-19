@@ -130,7 +130,7 @@ Releasing
 
 
 ----
-See the [TEALS Minecraft wiki](https://github.com/TEALSK12/tealsMC/wiki) for more project
+See the [TEALS Minecraft wiki](https://github.com/TEALSK12/teals-minecraft/wiki) for more project
 information.
 
 
